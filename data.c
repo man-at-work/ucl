@@ -1,7 +1,7 @@
 /*
  * main.c
  *
- *  Created on: 3 янв. 2016 г.
+ *  Created on: 3 СЏРЅРІ. 2016 Рі.
  *      Author: Tangaroa
  */
 
@@ -64,14 +64,14 @@ uclptr_t copy_atom (uclptr_t atom)
 
 int compare_atoms (uclptr_t atom1, uclptr_t atom2)
 {
-	if (IS_NIL(atom1) || IS_NIL(atom2)) return 1; /* сравнение NIL с NIL должно быть корректным*/
+	if (IS_NIL(atom1) || IS_NIL(atom2)) return 1; /* СЃСЂР°РІРЅРµРЅРёРµ NIL СЃ NIL РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ РєРѕСЂСЂРµРєС‚РЅС‹Рј*/
 	if ((!IS_NIL(atom1)) && (!IS_NIL(atom2)))
 	{
 		int type1_id = CAR(atom1);
 		int type2_id = CAR(atom2);
 		ucltype_t *t = type(type1_id);
 
-		if (type1_id != type2_id) return 0; /* разные типы - как правило, корректно сравнивать нельзя */
+		if (type1_id != type2_id) return 0; /* СЂР°Р·РЅС‹Рµ С‚РёРїС‹ - РєР°Рє РїСЂР°РІРёР»Рѕ, РєРѕСЂСЂРµРєС‚РЅРѕ СЃСЂР°РІРЅРёРІР°С‚СЊ РЅРµР»СЊР·СЏ */
 		return t->compare (CDR(atom1), CDR(atom2));
 	}
 	return 0;
@@ -102,15 +102,15 @@ void destroy_atom (uclptr_t atom)
 		uclptr_t data = CDR(atom);
 		if (t->destroy != 0)
 		{
-			t->destroy(data); /* удаляем данные */
+			t->destroy(data); /* СѓРґР°Р»СЏРµРј РґР°РЅРЅС‹Рµ */
 		}
-		cell_release(atom); /* освобождаем ячейку */
+		cell_release(atom); /* РѕСЃРІРѕР±РѕР¶РґР°РµРј СЏС‡РµР№РєСѓ */
 	}
 }
 
 uclptr_t list_transpose(uclptr_t lst)
-/* список переворачивается, одновременно с этим удаляется хребет оригинального списка.
- * Содержимое указываемых ячеек остаётся на своих местах. */
+/* СЃРїРёСЃРѕРє РїРµСЂРµРІРѕСЂР°С‡РёРІР°РµС‚СЃСЏ, РѕРґРЅРѕРІСЂРµРјРµРЅРЅРѕ СЃ СЌС‚РёРј СѓРґР°Р»СЏРµС‚СЃСЏ С…СЂРµР±РµС‚ РѕСЂРёРіРёРЅР°Р»СЊРЅРѕРіРѕ СЃРїРёСЃРєР°.
+ * РЎРѕРґРµСЂР¶РёРјРѕРµ СѓРєР°Р·С‹РІР°РµРјС‹С… СЏС‡РµРµРє РѕСЃС‚Р°С‘С‚СЃСЏ РЅР° СЃРІРѕРёС… РјРµСЃС‚Р°С…. */
 {
 	uclptr_t i;
 	uclptr_t r = NIL;

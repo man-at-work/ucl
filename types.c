@@ -108,17 +108,17 @@ static int INTEGER16_compare (uclptr_t d1, uclptr_t d2)
  **/
 
 static uclptr_t INTEGER32_create (const void* sample_data)
-/* Теперь надо посмотреть, влезает ли 32-битное число в поле CDR.
- * Если не влезает, оно будет храниться в отдельной ячейке (сделаем смелое предположение о том, что туда-то уж оно влезет). */
+/* РўРµРїРµСЂСЊ РЅР°РґРѕ РїРѕСЃРјРѕС‚СЂРµС‚СЊ, РІР»РµР·Р°РµС‚ Р»Рё 32-Р±РёС‚РЅРѕРµ С‡РёСЃР»Рѕ РІ РїРѕР»Рµ CDR.
+ * Р•СЃР»Рё РЅРµ РІР»РµР·Р°РµС‚, РѕРЅРѕ Р±СѓРґРµС‚ С…СЂР°РЅРёС‚СЊСЃСЏ РІ РѕС‚РґРµР»СЊРЅРѕР№ СЏС‡РµР№РєРµ (СЃРґРµР»Р°РµРј СЃРјРµР»РѕРµ РїСЂРµРґРїРѕР»РѕР¶РµРЅРёРµ Рѕ С‚РѕРј, С‡С‚Рѕ С‚СѓРґР°-С‚Рѕ СѓР¶ РѕРЅРѕ РІР»РµР·РµС‚). */
 {
-	if (sizeof(int32_t) != sizeof(uclptr_t)) /* определяется на этапе компиляции */
+	if (sizeof(int32_t) != sizeof(uclptr_t)) /* РѕРїСЂРµРґРµР»СЏРµС‚СЃСЏ РЅР° СЌС‚Р°РїРµ РєРѕРјРїРёР»СЏС†РёРё */
 	{
-		uclptr_t storage_index = cell_alloc(); /* возьмём ещё одну ячейку */
-		//int32_t **storage_cell_ptr = (int32_t**)&uclmem[storage_index]; /* представим, что это указатель на int */
-		int32_t **storage_cell_ptr = (int32_t**)&CONTAINER(storage_index); /* представим, что это указатель на int */
+		uclptr_t storage_index = cell_alloc(); /* РІРѕР·СЊРјС‘Рј РµС‰С‘ РѕРґРЅСѓ СЏС‡РµР№РєСѓ */
+		//int32_t **storage_cell_ptr = (int32_t**)&uclmem[storage_index]; /* РїСЂРµРґСЃС‚Р°РІРёРј, С‡С‚Рѕ СЌС‚Рѕ СѓРєР°Р·Р°С‚РµР»СЊ РЅР° int */
+		int32_t **storage_cell_ptr = (int32_t**)&CONTAINER(storage_index); /* РїСЂРµРґСЃС‚Р°РІРёРј, С‡С‚Рѕ СЌС‚Рѕ СѓРєР°Р·Р°С‚РµР»СЊ РЅР° int */
 		MANAGED(storage_index) = 1;
-		*storage_cell_ptr = (int32_t*)sample_data; /* положим его туда */
-		return storage_index; /* вернём индекс ячейки хранения */
+		*storage_cell_ptr = (int32_t*)sample_data; /* РїРѕР»РѕР¶РёРј РµРіРѕ С‚СѓРґР° */
+		return storage_index; /* РІРµСЂРЅС‘Рј РёРЅРґРµРєСЃ СЏС‡РµР№РєРё С…СЂР°РЅРµРЅРёСЏ */
 	}
 	else return (uint32_t)((intptr_t)sample_data);
 }
@@ -136,7 +136,7 @@ static void* INTEGER32_data (uclptr_t exemplair)
 
 static void INTEGER32_destroy (uclptr_t int_exemplair)
 {
-	if (sizeof(int32_t) != sizeof(uclptr_t)) /* определяется на этапе компиляции */
+	if (sizeof(int32_t) != sizeof(uclptr_t)) /* РѕРїСЂРµРґРµР»СЏРµС‚СЃСЏ РЅР° СЌС‚Р°РїРµ РєРѕРјРїРёР»СЏС†РёРё */
 	{
 		cell_release (int_exemplair);
 	};
@@ -182,15 +182,15 @@ static int INTEGER32_compare (uclptr_t d1, uclptr_t d2)
 /**
  **/
 
-uclptr_t chop (void *srcdata, int size) /* рубит указатель на некие данные и их размер */
+uclptr_t chop (void *srcdata, int size) /* СЂСѓР±РёС‚ СѓРєР°Р·Р°С‚РµР»СЊ РЅР° РЅРµРєРёРµ РґР°РЅРЅС‹Рµ Рё РёС… СЂР°Р·РјРµСЂ */
 {
 	uclptr_t chunks = NIL;
-	int i, num_of_chunks = size / sizeof(uclptr_t); /* количество кусков, на которые будет разбит массив */
+	int i, num_of_chunks = size / sizeof(uclptr_t); /* РєРѕР»РёС‡РµСЃС‚РІРѕ РєСѓСЃРєРѕРІ, РЅР° РєРѕС‚РѕСЂС‹Рµ Р±СѓРґРµС‚ СЂР°Р·Р±РёС‚ РјР°СЃСЃРёРІ */
 	uclptr_t *vdata = (uclptr_t *)srcdata;
 
 	for (i = 0; i < num_of_chunks; i++)
 	{
-		chunks = cons (chunks, vdata[i]); /* здесь мы нарушаем порядок полей ячейки - для замыкания в цепь используется CAR, а не CDR! */
+		chunks = cons (chunks, vdata[i]); /* Р·РґРµСЃСЊ РјС‹ РЅР°СЂСѓС€Р°РµРј РїРѕСЂСЏРґРѕРє РїРѕР»РµР№ СЏС‡РµР№РєРё - РґР»СЏ Р·Р°РјС‹РєР°РЅРёСЏ РІ С†РµРїСЊ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ CAR, Р° РЅРµ CDR! */
 		MANAGED(chunks) = 1;
 	}
 
@@ -237,7 +237,7 @@ static uclptr_t STRING_create (const void* sample_data)
 			return storage_index;
 		}
 	}
-	else /* физический указатель очень велик и не помещается даже на место целой ячейки */
+	else /* С„РёР·РёС‡РµСЃРєРёР№ СѓРєР°Р·Р°С‚РµР»СЊ РѕС‡РµРЅСЊ РІРµР»РёРє Рё РЅРµ РїРѕРјРµС‰Р°РµС‚СЃСЏ РґР°Р¶Рµ РЅР° РјРµСЃС‚Рѕ С†РµР»РѕР№ СЏС‡РµР№РєРё */
 	{
 		int length = strlen(sample_data) + 1;
 		char *src = (char*)malloc(length);
@@ -297,16 +297,16 @@ static int STRING_compare (uclptr_t d1, uclptr_t d2)
 
 /**
  **/
-static uclptr_t VECTOR_create (const void* sample_data) /* параметр - uint32_t, количество выделяемых ячеек. */
-/* Эта функция только создаёт пустой вектор, его наполнение - забота совершенно другой конструкции.
+static uclptr_t VECTOR_create (const void* sample_data) /* РїР°СЂР°РјРµС‚СЂ - uint32_t, РєРѕР»РёС‡РµСЃС‚РІРѕ РІС‹РґРµР»СЏРµРјС‹С… СЏС‡РµРµРє. */
+/* Р­С‚Р° С„СѓРЅРєС†РёСЏ С‚РѕР»СЊРєРѕ СЃРѕР·РґР°С‘С‚ РїСѓСЃС‚РѕР№ РІРµРєС‚РѕСЂ, РµРіРѕ РЅР°РїРѕР»РЅРµРЅРёРµ - Р·Р°Р±РѕС‚Р° СЃРѕРІРµСЂС€РµРЅРЅРѕ РґСЂСѓРіРѕР№ РєРѕРЅСЃС‚СЂСѓРєС†РёРё.
  * */
 {
 	uint32_t i, n = (uintptr_t)sample_data;
-	uint32_t size = (n * sizeof(uclptr_t));	/* смело! А вдруг упрёмся в ограничение? */
+	uint32_t size = (n * sizeof(uclptr_t));	/* СЃРјРµР»Рѕ! Рђ РІРґСЂСѓРі СѓРїСЂС‘РјСЃСЏ РІ РѕРіСЂР°РЅРёС‡РµРЅРёРµ? */
 	ucl_vector_t *vector;
 	uclptr_t storage_index;
 
-	if (sizeof(void*) <= sizeof(cell_t)) /* если указатель на кучу влезает целиком в поле container, то используем эту схему хранения */
+	if (sizeof(void*) <= sizeof(cell_t)) /* РµСЃР»Рё СѓРєР°Р·Р°С‚РµР»СЊ РЅР° РєСѓС‡Сѓ РІР»РµР·Р°РµС‚ С†РµР»РёРєРѕРј РІ РїРѕР»Рµ container, С‚Рѕ РёСЃРїРѕР»СЊР·СѓРµРј СЌС‚Сѓ СЃС…РµРјСѓ С…СЂР°РЅРµРЅРёСЏ */
 	{
 		storage_index = cell_alloc();
 		if (storage_index != NIL)
@@ -314,7 +314,7 @@ static uclptr_t VECTOR_create (const void* sample_data) /* параметр - uint32_t, 
 			ucl_vector_t **storage_cell_ptr = (ucl_vector_t**)&CONTAINER(storage_index);
 			//GC(storage_index) = GC_TRANSIENT;
 			MANAGED(storage_index) = 1;
-			*storage_cell_ptr = (ucl_vector_t*)malloc(sizeof(ucl_vector_t)); /* выделяем память под дескриптор ветора */
+			*storage_cell_ptr = (ucl_vector_t*)malloc(sizeof(ucl_vector_t)); /* РІС‹РґРµР»СЏРµРј РїР°РјСЏС‚СЊ РїРѕРґ РґРµСЃРєСЂРёРїС‚РѕСЂ РІРµС‚РѕСЂР° */
 			vector = *storage_cell_ptr;
 		}
 		else
@@ -323,7 +323,7 @@ static uclptr_t VECTOR_create (const void* sample_data) /* параметр - uint32_t, 
 			exit(-1);
 		}
 	}
-	else /* если физический указатель очень велик и не помещается даже на место целой ячейки, тогда используем другую схему хранения - чоппер! */
+	else /* РµСЃР»Рё С„РёР·РёС‡РµСЃРєРёР№ СѓРєР°Р·Р°С‚РµР»СЊ РѕС‡РµРЅСЊ РІРµР»РёРє Рё РЅРµ РїРѕРјРµС‰Р°РµС‚СЃСЏ РґР°Р¶Рµ РЅР° РјРµСЃС‚Рѕ С†РµР»РѕР№ СЏС‡РµР№РєРё, С‚РѕРіРґР° РёСЃРїРѕР»СЊР·СѓРµРј РґСЂСѓРіСѓСЋ СЃС…РµРјСѓ С…СЂР°РЅРµРЅРёСЏ - С‡РѕРїРїРµСЂ! */
 	{
 		vector = (ucl_vector_t*)malloc(sizeof(ucl_vector_t));
 		storage_index = chop (&vector, sizeof(ucl_vector_t*));
@@ -337,7 +337,7 @@ static uclptr_t VECTOR_create (const void* sample_data) /* параметр - uint32_t, 
 	return storage_index;
 }
 
-static void* VECTOR_data (uclptr_t exemplair) /* возвращает указатель на дескриптор массива индексов */
+static void* VECTOR_data (uclptr_t exemplair) /* РІРѕР·РІСЂР°С‰Р°РµС‚ СѓРєР°Р·Р°С‚РµР»СЊ РЅР° РґРµСЃРєСЂРёРїС‚РѕСЂ РјР°СЃСЃРёРІР° РёРЅРґРµРєСЃРѕРІ */
 {
 	if (sizeof(char*) <= sizeof(cell_t))
 	{
@@ -380,7 +380,7 @@ static int VECTOR_print (uclptr_t vector_exemplair, char *buffer)
 	uint32_t i;
 	char *ptr;
 
-	/* посчитаем общую длину печати */
+	/* РїРѕСЃС‡РёС‚Р°РµРј РѕР±С‰СѓСЋ РґР»РёРЅСѓ РїРµС‡Р°С‚Рё */
 
 	if (buffer != 0) { buffer[total_length] = '['; buffer[total_length+1] = ' '; }
 	total_length += 2;
@@ -397,13 +397,13 @@ static int VECTOR_print (uclptr_t vector_exemplair, char *buffer)
 		if (TAG(index) == TAG_ATOM)
 		{
 			ucltype_t *typeid = atom_type_of(index);
-			total_length += (typeid->print(CDR(index), ptr) + 1); /* включая пробел */
+			total_length += (typeid->print(CDR(index), ptr) + 1); /* РІРєР»СЋС‡Р°СЏ РїСЂРѕР±РµР» */
 			if (buffer != 0) buffer[total_length - 1] = ' ';
 		}
 		else if (TAG(index) == TAG_CONS)
 		{
 			if (buffer != 0) { buffer[total_length] = 'L'; buffer[total_length+1] = ' '; }
-			total_length += 2; /* "L ", списки так печатать не будем, слишком накладно */
+			total_length += 2; /* "L ", СЃРїРёСЃРєРё С‚Р°Рє РїРµС‡Р°С‚Р°С‚СЊ РЅРµ Р±СѓРґРµРј, СЃР»РёС€РєРѕРј РЅР°РєР»Р°РґРЅРѕ */
 		}
 	}
 	if (buffer != 0) { buffer[total_length] = ']'; /*buffer[total_length+1] = ' ';*/ }
@@ -445,7 +445,7 @@ uclptr_t VECTOR_set_element (uclptr_t vector_exemplair, uclptr_t u32_index, uclp
 	{
 		if (vector->ptr[index] != NIL) { delete_this(vector->ptr[index]); }
 		vector->ptr[index] = newdata;
-		//MANAGED(newdata) = 1; /* указание сборщику мусора, что эти ячейки трогать не надо */
+		//MANAGED(newdata) = 1; /* СѓРєР°Р·Р°РЅРёРµ СЃР±РѕСЂС‰РёРєСѓ РјСѓСЃРѕСЂР°, С‡С‚Рѕ СЌС‚Рё СЏС‡РµР№РєРё С‚СЂРѕРіР°С‚СЊ РЅРµ РЅР°РґРѕ */
 		GC(newdata) = GC_TRANSIENT;
 		return newdata;
 	}
@@ -481,10 +481,10 @@ uclptr_t VECTOR_get_length (uclptr_t vector_exemplair)
 /**
  **/
 
-/* Небольшой хак для экономии памяти:
- * если имя символа полностью помещается внутрь поля CDR,
- * то мы не используем кучу (heap) для хранения этого имени (строки).
- * Таким образом, короткие символы занимают ровно одну ячейку памяти. */
+/* РќРµР±РѕР»СЊС€РѕР№ С…Р°Рє РґР»СЏ СЌРєРѕРЅРѕРјРёРё РїР°РјСЏС‚Рё:
+ * РµСЃР»Рё РёРјСЏ СЃРёРјРІРѕР»Р° РїРѕР»РЅРѕСЃС‚СЊСЋ РїРѕРјРµС‰Р°РµС‚СЃСЏ РІРЅСѓС‚СЂСЊ РїРѕР»СЏ CDR,
+ * С‚Рѕ РјС‹ РЅРµ РёСЃРїРѕР»СЊР·СѓРµРј РєСѓС‡Сѓ (heap) РґР»СЏ С…СЂР°РЅРµРЅРёСЏ СЌС‚РѕРіРѕ РёРјРµРЅРё (СЃС‚СЂРѕРєРё).
+ * РўР°РєРёРј РѕР±СЂР°Р·РѕРј, РєРѕСЂРѕС‚РєРёРµ СЃРёРјРІРѕР»С‹ Р·Р°РЅРёРјР°СЋС‚ СЂРѕРІРЅРѕ РѕРґРЅСѓ СЏС‡РµР№РєСѓ РїР°РјСЏС‚Рё. */
 #pragma pack(1)
 typedef union
 {
@@ -499,15 +499,15 @@ typedef union
 
 static uclptr_t SYMBOL_create (const void* symbol_name)
 {
-	int l = strlen(symbol_name); /* длина имени символа */
-	if ( l > sizeof(uclptr_t) ) /* если имя символа не поместится прямо внутри поля CDR, то храним его просто как строку */
+	int l = strlen(symbol_name); /* РґР»РёРЅР° РёРјРµРЅРё СЃРёРјРІРѕР»Р° */
+	if ( l > sizeof(uclptr_t) ) /* РµСЃР»Рё РёРјСЏ СЃРёРјРІРѕР»Р° РЅРµ РїРѕРјРµСЃС‚РёС‚СЃСЏ РїСЂСЏРјРѕ РІРЅСѓС‚СЂРё РїРѕР»СЏ CDR, С‚Рѕ С…СЂР°РЅРёРј РµРіРѕ РїСЂРѕСЃС‚Рѕ РєР°Рє СЃС‚СЂРѕРєСѓ */
 	{
 		uclptr_t storage_index = cell_alloc();
 		if (storage_index != NIL)
 		{
 			int length = l + 1;
 
-			if (sizeof(char*) <= sizeof(cell_t)) /* указатель влезает на место ячейки */
+			if (sizeof(char*) <= sizeof(cell_t)) /* СѓРєР°Р·Р°С‚РµР»СЊ РІР»РµР·Р°РµС‚ РЅР° РјРµСЃС‚Рѕ СЏС‡РµР№РєРё */
 			{
 				//char **storage_cell_ptr = (char**)&uclmem[storage_index];
 				char **storage_cell_ptr = (char**)&CONTAINER(storage_index);
@@ -519,7 +519,7 @@ static uclptr_t SYMBOL_create (const void* symbol_name)
 				while (( *s++ = toupper(*r++) ) != 0 );
 				return storage_index;
 			}
-			else /* указатель слишком велик */
+			else /* СѓРєР°Р·Р°С‚РµР»СЊ СЃР»РёС€РєРѕРј РІРµР»РёРє */
 			{
 				char *src = (char*)malloc(length), *s = src, *r = (char*)symbol_name;
 				//strcpy (src, symbol_name);
@@ -528,14 +528,14 @@ static uclptr_t SYMBOL_create (const void* symbol_name)
 			}
 		}
 	}
-	else /* символ полностью помещается в CDR */
+	else /* СЃРёРјРІРѕР» РїРѕР»РЅРѕСЃС‚СЊСЋ РїРѕРјРµС‰Р°РµС‚СЃСЏ РІ CDR */
 	{
 		int i;
 		strhack_t strhack = { .ptr = 0 };
 		char *s = (char *)symbol_name;
 		for (i=0; i<l; i++) { strhack.str[i] = toupper(s[i]); }
 		//for (i=0; i<l; i++) { strhack.str[i] = s[i]; }
-		MARK_SYMBOL_PACKED(strhack.ptr); /* выставляем старший бит */
+		MARK_SYMBOL_PACKED(strhack.ptr); /* РІС‹СЃС‚Р°РІР»СЏРµРј СЃС‚Р°СЂС€РёР№ Р±РёС‚ */
 		//printf ("Packed symbol: <"PTR_FORMAT">\n", strhack.ptr);
 		return strhack.ptr;
 	}
@@ -547,15 +547,15 @@ static void* SYMBOL_data (uclptr_t symbol_exemplair)
 	char *string_ptr = 0;
 	if (PACKED_SYMBOL(symbol_exemplair))
 	{
-		static strhack_t strhack; /* статик для того, чтобы хакнутый указатель оставался бы валидным.
-		Но это потенциальный источник проблем, если система станет многозадачной: операцию взятия данных НАДО делать атомарной. */
+		static strhack_t strhack; /* СЃС‚Р°С‚РёРє РґР»СЏ С‚РѕРіРѕ, С‡С‚РѕР±С‹ С…Р°РєРЅСѓС‚С‹Р№ СѓРєР°Р·Р°С‚РµР»СЊ РѕСЃС‚Р°РІР°Р»СЃСЏ Р±С‹ РІР°Р»РёРґРЅС‹Рј.
+		РќРѕ СЌС‚Рѕ РїРѕС‚РµРЅС†РёР°Р»СЊРЅС‹Р№ РёСЃС‚РѕС‡РЅРёРє РїСЂРѕР±Р»РµРј, РµСЃР»Рё СЃРёСЃС‚РµРјР° СЃС‚Р°РЅРµС‚ РјРЅРѕРіРѕР·Р°РґР°С‡РЅРѕР№: РѕРїРµСЂР°С†РёСЋ РІР·СЏС‚РёСЏ РґР°РЅРЅС‹С… РќРђР”Рћ РґРµР»Р°С‚СЊ Р°С‚РѕРјР°СЂРЅРѕР№. */
 		memset (strhack.str, 0, sizeof(strhack.str));
 		strhack.ptr = GET_SYMBOL_DEMARKED(symbol_exemplair);
 		string_ptr = strhack.str;
 	}
 	else
 	{
-		if (sizeof(char*) <= sizeof(cell_t)) /* указатель влезает на место ячейки */
+		if (sizeof(char*) <= sizeof(cell_t)) /* СѓРєР°Р·Р°С‚РµР»СЊ РІР»РµР·Р°РµС‚ РЅР° РјРµСЃС‚Рѕ СЏС‡РµР№РєРё */
 		{
 			//string_ptr = *(char**)&uclmem[symbol_exemplair];
 			string_ptr = *(char**)&CONTAINER(symbol_exemplair);
@@ -570,7 +570,7 @@ static void* SYMBOL_data (uclptr_t symbol_exemplair)
 
 static void SYMBOL_destroy (uclptr_t symbol_exemplair)
 {
-	if (PACKED_SYMBOL(symbol_exemplair)) /* упакованный символ */
+	if (PACKED_SYMBOL(symbol_exemplair)) /* СѓРїР°РєРѕРІР°РЅРЅС‹Р№ СЃРёРјРІРѕР» */
 	{
 
 	}
@@ -588,7 +588,7 @@ static int SYMBOL_print (uclptr_t symbol_exemplair, char *buffer)
 	int string_length = 0;
 #if 0
 	char *string_ptr = 0;
-	if (PACKED_SYMBOL(symbol_exemplair)) /* упакованный символ */
+	if (PACKED_SYMBOL(symbol_exemplair)) /* СѓРїР°РєРѕРІР°РЅРЅС‹Р№ СЃРёРјРІРѕР» */
 	{
 		strhack_t strhack;
 		memset (strhack.str, 0, sizeof(strhack.str));
@@ -611,17 +611,17 @@ static int SYMBOL_print (uclptr_t symbol_exemplair, char *buffer)
 
 static int SYMBOL_compare (uclptr_t d1, uclptr_t d2)
 {
-	if ( (PACKED_SYMBOL(d1)) && (PACKED_SYMBOL(d2)) ) /* если оба символа упакованы, достаточно сравнить константы */
+	if ( (PACKED_SYMBOL(d1)) && (PACKED_SYMBOL(d2)) ) /* РµСЃР»Рё РѕР±Р° СЃРёРјРІРѕР»Р° СѓРїР°РєРѕРІР°РЅС‹, РґРѕСЃС‚Р°С‚РѕС‡РЅРѕ СЃСЂР°РІРЅРёС‚СЊ РєРѕРЅСЃС‚Р°РЅС‚С‹ */
 	{
 		return (d1 == d2);
 	}
-	else if ( (!(PACKED_SYMBOL(d1))) && (!(PACKED_SYMBOL(d2))) ) /* если оба символы не упакованы, сравниваем строки */
+	else if ( (!(PACKED_SYMBOL(d1))) && (!(PACKED_SYMBOL(d2))) ) /* РµСЃР»Рё РѕР±Р° СЃРёРјРІРѕР»С‹ РЅРµ СѓРїР°РєРѕРІР°РЅС‹, СЃСЂР°РІРЅРёРІР°РµРј СЃС‚СЂРѕРєРё */
 	{
 		char* str1 = SYMBOL_data(d1);
 		char* str2 = SYMBOL_data(d2);
 		return ((str1 != 0) && (str2 != 0) && (strcmp(str1, str2)==0));
 	}
-	else return 0; /* в иных случаях символы не равны */
+	else return 0; /* РІ РёРЅС‹С… СЃР»СѓС‡Р°СЏС… СЃРёРјРІРѕР»С‹ РЅРµ СЂР°РІРЅС‹ */
 }
 /**
  **/
@@ -629,7 +629,7 @@ static int SYMBOL_compare (uclptr_t d1, uclptr_t d2)
 static ucltype_t UCL_Types[] =
 {
 	{ "BOOL", BOOL_create, BOOL_destroy, BOOL_print, BOOL_compare, BOOL_data },	/* 0 */
-	{ "CHAR", CHAR_create, CHAR_destroy, CHAR_print, CHAR_compare, BOOL_data },	/* 1, общая функция выдачи данных */
+	{ "CHAR", CHAR_create, CHAR_destroy, CHAR_print, CHAR_compare, BOOL_data },	/* 1, РѕР±С‰Р°СЏ С„СѓРЅРєС†РёСЏ РІС‹РґР°С‡Рё РґР°РЅРЅС‹С… */
 	{ "UINT16", INTEGER16_create, INTEGER16_destroy, UINT16_print, INTEGER16_compare, BOOL_data }, /* 2 */
 	{ "INT16", INTEGER16_create, INTEGER16_destroy, INT16_print, INTEGER16_compare, BOOL_data }, /* 3 */
 	{ "UINT32", INTEGER32_create, INTEGER32_destroy, UINT32_print, INTEGER32_compare, INTEGER32_data }, /* 4 */
@@ -638,7 +638,7 @@ static ucltype_t UCL_Types[] =
 	{ "STRING", STRING_create, STRING_destroy, STRING_print, STRING_compare, STRING_data }, /* 7 */
 	{ "ARRAY", 0, 0, 0, 0, 0 }, /* 8 */
 	{ "SYMBOL", SYMBOL_create, SYMBOL_destroy, SYMBOL_print, SYMBOL_compare, SYMBOL_data }, /* 9 */
-	{ "VECTOR", VECTOR_create, VECTOR_destroy, VECTOR_print, VECTOR_compare, VECTOR_data }, /* 10, индексируемый массив [последовательно расположенных] атомов, могут быть разного типа */
+	{ "VECTOR", VECTOR_create, VECTOR_destroy, VECTOR_print, VECTOR_compare, VECTOR_data }, /* 10, РёРЅРґРµРєСЃРёСЂСѓРµРјС‹Р№ РјР°СЃСЃРёРІ [РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕ СЂР°СЃРїРѕР»РѕР¶РµРЅРЅС‹С…] Р°С‚РѕРјРѕРІ, РјРѕРіСѓС‚ Р±С‹С‚СЊ СЂР°Р·РЅРѕРіРѕ С‚РёРїР° */
 	{ "LAMBDA", 0, 0, 0, 0, 0 },
 };
 

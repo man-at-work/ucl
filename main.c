@@ -1,7 +1,7 @@
 /*
  * main.c
  *
- *  Created on: 3 янв. 2016 г.
+ *  Created on: 3 СЏРЅРІ. 2016 Рі.
  *      Author: Tangaroa
  */
 
@@ -15,15 +15,15 @@
 #include "data.h"
 #include "types.h"
 
-uclptr_t symbol_intern (uclptr_t *symlist, uclptr_t symbol); /* Интернирует символ (ищет по образцу).
-Если символ найден, возвращается указатель на его запись, предоставленный образец стирается (т.к. его копия уже есть в памяти).
-Если символ не найден, создаётся новая запись, содержащая только имя символа (предоставленный образец) и возвращается указатель на неё.
+uclptr_t symbol_intern (uclptr_t *symlist, uclptr_t symbol); /* РРЅС‚РµСЂРЅРёСЂСѓРµС‚ СЃРёРјРІРѕР» (РёС‰РµС‚ РїРѕ РѕР±СЂР°Р·С†Сѓ).
+Р•СЃР»Рё СЃРёРјРІРѕР» РЅР°Р№РґРµРЅ, РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ СѓРєР°Р·Р°С‚РµР»СЊ РЅР° РµРіРѕ Р·Р°РїРёСЃСЊ, РїСЂРµРґРѕСЃС‚Р°РІР»РµРЅРЅС‹Р№ РѕР±СЂР°Р·РµС† СЃС‚РёСЂР°РµС‚СЃСЏ (С‚.Рє. РµРіРѕ РєРѕРїРёСЏ СѓР¶Рµ РµСЃС‚СЊ РІ РїР°РјСЏС‚Рё).
+Р•СЃР»Рё СЃРёРјРІРѕР» РЅРµ РЅР°Р№РґРµРЅ, СЃРѕР·РґР°С‘С‚СЃСЏ РЅРѕРІР°СЏ Р·Р°РїРёСЃСЊ, СЃРѕРґРµСЂР¶Р°С‰Р°СЏ С‚РѕР»СЊРєРѕ РёРјСЏ СЃРёРјРІРѕР»Р° (РїСЂРµРґРѕСЃС‚Р°РІР»РµРЅРЅС‹Р№ РѕР±СЂР°Р·РµС†) Рё РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ СѓРєР°Р·Р°С‚РµР»СЊ РЅР° РЅРµС‘.
  */
-void symbol_forget (uclptr_t *symlist, uclptr_t symbol); /* забываем символ (удаляем его из списка) */
+void symbol_forget (uclptr_t *symlist, uclptr_t symbol); /* Р·Р°Р±С‹РІР°РµРј СЃРёРјРІРѕР» (СѓРґР°Р»СЏРµРј РµРіРѕ РёР· СЃРїРёСЃРєР°) */
 void symbols_purge(uclptr_t *symlist);
-uclptr_t symbol_lookup (uclptr_t symlist, uclptr_t symbol); /* разыскивает в указанном списке запись о символе, за образец берёт предоставленный символ.
-Если символ найден, возвращается указатель на его запись.
-Если символ не найден, возвращается NIL */
+uclptr_t symbol_lookup (uclptr_t symlist, uclptr_t symbol); /* СЂР°Р·С‹СЃРєРёРІР°РµС‚ РІ СѓРєР°Р·Р°РЅРЅРѕРј СЃРїРёСЃРєРµ Р·Р°РїРёСЃСЊ Рѕ СЃРёРјРІРѕР»Рµ, Р·Р° РѕР±СЂР°Р·РµС† Р±РµСЂС‘С‚ РїСЂРµРґРѕСЃС‚Р°РІР»РµРЅРЅС‹Р№ СЃРёРјРІРѕР».
+Р•СЃР»Рё СЃРёРјРІРѕР» РЅР°Р№РґРµРЅ, РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ СѓРєР°Р·Р°С‚РµР»СЊ РЅР° РµРіРѕ Р·Р°РїРёСЃСЊ.
+Р•СЃР»Рё СЃРёРјРІРѕР» РЅРµ РЅР°Р№РґРµРЅ, РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ NIL */
 
 uclptr_t symbol_lookup_scoped (uclptr_t scope, uclptr_t symbol);
 
@@ -45,7 +45,7 @@ const ucl_operator_t* get_operator (int i);
 void operator_describe (const ucl_operator_t *);
 uclptr_t operator_call (uclptr_t funcname, uclptr_t argslist);
 
-/* самое интересное - тут */
+/* СЃР°РјРѕРµ РёРЅС‚РµСЂРµСЃРЅРѕРµ - С‚СѓС‚ */
 uclptr_t eval (uclptr_t entity);
 
 /* ----------------------------------------------------------- */
@@ -56,22 +56,22 @@ int main(void)
 	uclptr_t arr=NIL;
 	init_cells();
 
-	m->environment = cons ( NIL, m->environment ); /* начальный уровень окружения уровень контекста */
+	m->environment = cons ( NIL, m->environment ); /* РЅР°С‡Р°Р»СЊРЅС‹Р№ СѓСЂРѕРІРµРЅСЊ РѕРєСЂСѓР¶РµРЅРёСЏ СѓСЂРѕРІРµРЅСЊ РєРѕРЅС‚РµРєСЃС‚Р° */
 	m->context = &CAR(m->environment);
 
 	symbol_intern (m->context, create_atom (UCL_TYPE_SYMBOL, "foxtrot"));
 	symbol_set_value (*(m->context), create_atom (UCL_TYPE_SYMBOL, "foxtrot"), create_atom (UCL_TYPE_STRING, "Letter F"));
 
-	//symbols_purge (context); /* удалим все символы текущего контекста... а можно и не удалять - GC о них позаботится */
+	//symbols_purge (context); /* СѓРґР°Р»РёРј РІСЃРµ СЃРёРјРІРѕР»С‹ С‚РµРєСѓС‰РµРіРѕ РєРѕРЅС‚РµРєСЃС‚Р°... Р° РјРѕР¶РЅРѕ Рё РЅРµ СѓРґР°Р»СЏС‚СЊ - GC Рѕ РЅРёС… РїРѕР·Р°Р±РѕС‚РёС‚СЃСЏ */
 
-	m->environment = cons ( NIL, m->environment ); /* спустимся на один уровень окружения */
+	m->environment = cons ( NIL, m->environment ); /* СЃРїСѓСЃС‚РёРјСЃСЏ РЅР° РѕРґРёРЅ СѓСЂРѕРІРµРЅСЊ РѕРєСЂСѓР¶РµРЅРёСЏ */
 	m->context = &CAR(m->environment);
 
 	symbol_intern (m->context, create_atom (UCL_TYPE_SYMBOL, "delta"));
 	symbol_set_value (*(m->context), create_atom (UCL_TYPE_SYMBOL, "delta"), create_atom (UCL_TYPE_STRING, "Letter D"));
 	printf("environment one level down: "); debug_list (m->environment); printf ("\n");
 
-	//environment = CDR(environment); /* поднимемся обратно */
+	//environment = CDR(environment); /* РїРѕРґРЅРёРјРµРјСЃСЏ РѕР±СЂР°С‚РЅРѕ */
 	//context = &CAR(environment);
 
 
@@ -227,7 +227,7 @@ int main(void)
 
 #endif
 
-	/* следующий вызов должен зафейлить, т.к. указываемый символ находится вне пределов досягаемости для SET */
+	/* СЃР»РµРґСѓСЋС‰РёР№ РІС‹Р·РѕРІ РґРѕР»Р¶РµРЅ Р·Р°С„РµР№Р»РёС‚СЊ, С‚.Рє. СѓРєР°Р·С‹РІР°РµРјС‹Р№ СЃРёРјРІРѕР» РЅР°С…РѕРґРёС‚СЃСЏ РІРЅРµ РїСЂРµРґРµР»РѕРІ РґРѕСЃСЏРіР°РµРјРѕСЃС‚Рё РґР»СЏ SET */
 	symbol_set_value (*(m->context), create_atom (UCL_TYPE_SYMBOL, "foxtrot"), create_atom (UCL_TYPE_STRING, "Replaced with this string"));
 	goto exit;
 exit:
@@ -251,58 +251,58 @@ exit:
 /* ----------------------------------------------------------- */
 /* ----------------------------------------------------------- */
 
-void symbol_forget (uclptr_t *symlist, uclptr_t symbol) /* забываем символ (удаляем его из списка) */
+void symbol_forget (uclptr_t *symlist, uclptr_t symbol) /* Р·Р°Р±С‹РІР°РµРј СЃРёРјРІРѕР» (СѓРґР°Р»СЏРµРј РµРіРѕ РёР· СЃРїРёСЃРєР°) */
 {
 	uclptr_t i;
 
-	if (compare_atoms (symbol, CAR(CAR(*symlist)))) /* если символ вдруг находится в голове списка */
+	if (compare_atoms (symbol, CAR(CAR(*symlist)))) /* РµСЃР»Рё СЃРёРјРІРѕР» РІРґСЂСѓРі РЅР°С…РѕРґРёС‚СЃСЏ РІ РіРѕР»РѕРІРµ СЃРїРёСЃРєР° */
 	{
-		uintptr_t n = CDR(*symlist); /* нужен следующий элемент */
-		list_delete (CAR(*symlist)); /* удаляем эту запись */
-		*symlist = n; /* корректируем голову списка */
+		uintptr_t n = CDR(*symlist); /* РЅСѓР¶РµРЅ СЃР»РµРґСѓСЋС‰РёР№ СЌР»РµРјРµРЅС‚ */
+		list_delete (CAR(*symlist)); /* СѓРґР°Р»СЏРµРј СЌС‚Сѓ Р·Р°РїРёСЃСЊ */
+		*symlist = n; /* РєРѕСЂСЂРµРєС‚РёСЂСѓРµРј РіРѕР»РѕРІСѓ СЃРїРёСЃРєР° */
 	}
 	else for (i = *symlist; !IS_NIL(i); i = CDR(i))
 	{
-		if (!IS_NIL(CDR(i))) /* хвост не пуст */
+		if (!IS_NIL(CDR(i))) /* С…РІРѕСЃС‚ РЅРµ РїСѓСЃС‚ */
 		{
-			uclptr_t candidate = CAR(CAR(CDR(i))); /* кандидат - возможно, следующая запись? берём её начало */
+			uclptr_t candidate = CAR(CAR(CDR(i))); /* РєР°РЅРґРёРґР°С‚ - РІРѕР·РјРѕР¶РЅРѕ, СЃР»РµРґСѓСЋС‰Р°СЏ Р·Р°РїРёСЃСЊ? Р±РµСЂС‘Рј РµС‘ РЅР°С‡Р°Р»Рѕ */
 			printf ("candidate: "); print_this(candidate); printf ("\n");
-			if (compare_atoms (symbol, candidate)) /* сравниваем */
+			if (compare_atoms (symbol, candidate)) /* СЃСЂР°РІРЅРёРІР°РµРј */
 			{
-				/* в случае совпадения: */
-				uclptr_t n = IS_NIL(CDR(i)) ? NIL : CDR(CDR(i)); /* берём индекс следующей после следующей записи */
-				delete_this (CAR(CDR(i))); /* удаляем найденную запись */
-				CDR(i) = n; /* корректируем индекс текущей записи */
-				break; /* ломаем цикл */
+				/* РІ СЃР»СѓС‡Р°Рµ СЃРѕРІРїР°РґРµРЅРёСЏ: */
+				uclptr_t n = IS_NIL(CDR(i)) ? NIL : CDR(CDR(i)); /* Р±РµСЂС‘Рј РёРЅРґРµРєСЃ СЃР»РµРґСѓСЋС‰РµР№ РїРѕСЃР»Рµ СЃР»РµРґСѓСЋС‰РµР№ Р·Р°РїРёСЃРё */
+				delete_this (CAR(CDR(i))); /* СѓРґР°Р»СЏРµРј РЅР°Р№РґРµРЅРЅСѓСЋ Р·Р°РїРёСЃСЊ */
+				CDR(i) = n; /* РєРѕСЂСЂРµРєС‚РёСЂСѓРµРј РёРЅРґРµРєСЃ С‚РµРєСѓС‰РµР№ Р·Р°РїРёСЃРё */
+				break; /* Р»РѕРјР°РµРј С†РёРєР» */
 			}
 		}
 	}
-	destroy_atom(symbol); /* переданный образец удаляется за ненадобностью */
+	destroy_atom(symbol); /* РїРµСЂРµРґР°РЅРЅС‹Р№ РѕР±СЂР°Р·РµС† СѓРґР°Р»СЏРµС‚СЃСЏ Р·Р° РЅРµРЅР°РґРѕР±РЅРѕСЃС‚СЊСЋ */
 }
 
 uclptr_t symbol_lookup (uclptr_t symlist, uclptr_t symbol)
-/* наивно полагаем, что нам скормили правильные параметры */
+/* РЅР°РёРІРЅРѕ РїРѕР»Р°РіР°РµРј, С‡С‚Рѕ РЅР°Рј СЃРєРѕСЂРјРёР»Рё РїСЂР°РІРёР»СЊРЅС‹Рµ РїР°СЂР°РјРµС‚СЂС‹ */
 {
 	uclptr_t symrec;
 	for (symrec = symlist; !IS_NIL(symrec); symrec = CDR(symrec))
 	{
-		uclptr_t candidate = CAR(CAR(symrec)); /* CAR(symrec) - первый элемент списка symrec, CAR(CAR)) это первый элемент первого элемента, очевидно */
+		uclptr_t candidate = CAR(CAR(symrec)); /* CAR(symrec) - РїРµСЂРІС‹Р№ СЌР»РµРјРµРЅС‚ СЃРїРёСЃРєР° symrec, CAR(CAR)) СЌС‚Рѕ РїРµСЂРІС‹Р№ СЌР»РµРјРµРЅС‚ РїРµСЂРІРѕРіРѕ СЌР»РµРјРµРЅС‚Р°, РѕС‡РµРІРёРґРЅРѕ */
 		if (compare_atoms (symbol, candidate))
 		{
-			//destroy_atom(symbol); /* символ найден, образец больше не нужен -- НАДО ЛИ? МОЖНО ЛИ? А если символ взят откуда-то ещё? */
+			//destroy_atom(symbol); /* СЃРёРјРІРѕР» РЅР°Р№РґРµРЅ, РѕР±СЂР°Р·РµС† Р±РѕР»СЊС€Рµ РЅРµ РЅСѓР¶РµРЅ -- РќРђР”Рћ Р›Р? РњРћР–РќРћ Р›Р? Рђ РµСЃР»Рё СЃРёРјРІРѕР» РІР·СЏС‚ РѕС‚РєСѓРґР°-С‚Рѕ РµС‰С‘? */
 			return CAR(symrec);
 		}
 	}
 	return NIL;
 }
 
-uclptr_t symbol_lookup_scoped (uclptr_t scope, uclptr_t symbol) /* ищет символ по всему указанному списку списков пар */
+uclptr_t symbol_lookup_scoped (uclptr_t scope, uclptr_t symbol) /* РёС‰РµС‚ СЃРёРјРІРѕР» РїРѕ РІСЃРµРјСѓ СѓРєР°Р·Р°РЅРЅРѕРјСѓ СЃРїРёСЃРєСѓ СЃРїРёСЃРєРѕРІ РїР°СЂ */
 {
 	uclptr_t i, symrec = NIL;
 	for (i = scope; !IS_NIL(i); i = CDR(i))
 	{
 		symrec = symbol_lookup (CAR(i), symbol);
-		if (!IS_NIL(symrec)) return symrec; /* будем искать до тех пор, пока не найдём */
+		if (!IS_NIL(symrec)) return symrec; /* Р±СѓРґРµРј РёСЃРєР°С‚СЊ РґРѕ С‚РµС… РїРѕСЂ, РїРѕРєР° РЅРµ РЅР°Р№РґС‘Рј */
 	}
 	return NIL;
 }
@@ -315,11 +315,11 @@ uclptr_t symbol_intern (uclptr_t *symlist, uclptr_t symbol)
 		uclptr_t candidate = CAR(CAR(i));
 		if (compare_atoms (symbol, candidate))
 		{
-			destroy_atom(symbol); /* переданный символ удаляется, т.к. его копия уже есть в списке */
+			destroy_atom(symbol); /* РїРµСЂРµРґР°РЅРЅС‹Р№ СЃРёРјРІРѕР» СѓРґР°Р»СЏРµС‚СЃСЏ, С‚.Рє. РµРіРѕ РєРѕРїРёСЏ СѓР¶Рµ РµСЃС‚СЊ РІ СЃРїРёСЃРєРµ */
 			return CAR(i);
 		}
 	}
-	/* если символ не найден (или список пуст) */
+	/* РµСЃР»Рё СЃРёРјРІРѕР» РЅРµ РЅР°Р№РґРµРЅ (РёР»Рё СЃРїРёСЃРѕРє РїСѓСЃС‚) */
 	*symlist = cons	(cons (symbol, NIL), *symlist);
 	return CAR(*symlist);
 }
@@ -356,7 +356,7 @@ uclptr_t symbol_get_this_value (uclptr_t symrec)
 		printf ("GET VALUE warning: symbol is not binded\n");
 		return NIL;
 	}
-	return CDR(symrec); /* возвращаем список свойств (точнее, единственное свойство - значение) */
+	return CDR(symrec); /* РІРѕР·РІСЂР°С‰Р°РµРј СЃРїРёСЃРѕРє СЃРІРѕР№СЃС‚РІ (С‚РѕС‡РЅРµРµ, РµРґРёРЅСЃС‚РІРµРЅРЅРѕРµ СЃРІРѕР№СЃС‚РІРѕ - Р·РЅР°С‡РµРЅРёРµ) */
 }
 
 uclptr_t symbol_set_this_value (uclptr_t symrec, uclptr_t value)
@@ -372,7 +372,7 @@ uclptr_t symbol_set_this_value (uclptr_t symrec, uclptr_t value)
 		delete_this(CDR(symrec));
 	}
 	CDR(symrec) = value;
-	return symrec; /* возвращаем всю запись о символе */
+	return symrec; /* РІРѕР·РІСЂР°С‰Р°РµРј РІСЃСЋ Р·Р°РїРёСЃСЊ Рѕ СЃРёРјРІРѕР»Рµ */
 }
 
 
@@ -476,14 +476,14 @@ uclptr_t eval (uclptr_t entity)
 			switch (typeid)
 			{
 				case UCL_TYPE_SYMBOL:
-				/* для символов - возвращаем их значение */
+				/* РґР»СЏ СЃРёРјРІРѕР»РѕРІ - РІРѕР·РІСЂР°С‰Р°РµРј РёС… Р·РЅР°С‡РµРЅРёРµ */
 				{
 					return symbol_get_value (m->environment, entity);
 				};
 				break;
 
 				default:
-				/* все прочие атомы - самовычислимые */
+				/* РІСЃРµ РїСЂРѕС‡РёРµ Р°С‚РѕРјС‹ - СЃР°РјРѕРІС‹С‡РёСЃР»РёРјС‹Рµ */
 				{
 					return entity;
 				};
@@ -500,7 +500,7 @@ uclptr_t eval (uclptr_t entity)
 			if ( (!IS_NIL(funcname)) && (CAR(funcname) == UCL_TYPE_SYMBOL) )
 			{
 				const ucl_operator_t *f;
-				/* список аргументов оператору передаётся "как есть" */
+				/* СЃРїРёСЃРѕРє Р°СЂРіСѓРјРµРЅС‚РѕРІ РѕРїРµСЂР°С‚РѕСЂСѓ РїРµСЂРµРґР°С‘С‚СЃСЏ "РєР°Рє РµСЃС‚СЊ" */
 				if ((f = get_operator (find_operator(funcname))) != 0)
 				{
 					return f->code(argslist);
@@ -510,9 +510,9 @@ uclptr_t eval (uclptr_t entity)
 					uclptr_t lambda = symbol_get_value(m->environment, funcname);
 					if (!IS_NIL(lambda) && (CAR(lambda) == UCL_TYPE_LAMBDA) )
 					{
-						uclptr_t proto = (uclptr_t)(uintptr_t)atom_data_of(lambda); /* возвращает пару (args body), где
-							args это список аргументов (может быть пустым),
-							body список инструкций (пустым быть не должен, но тоже может) */
+						uclptr_t proto = (uclptr_t)(uintptr_t)atom_data_of(lambda); /* РІРѕР·РІСЂР°С‰Р°РµС‚ РїР°СЂСѓ (args body), РіРґРµ
+							args СЌС‚Рѕ СЃРїРёСЃРѕРє Р°СЂРіСѓРјРµРЅС‚РѕРІ (РјРѕР¶РµС‚ Р±С‹С‚СЊ РїСѓСЃС‚С‹Рј),
+							body СЃРїРёСЃРѕРє РёРЅСЃС‚СЂСѓРєС†РёР№ (РїСѓСЃС‚С‹Рј Р±С‹С‚СЊ РЅРµ РґРѕР»Р¶РµРЅ, РЅРѕ С‚РѕР¶Рµ РјРѕР¶РµС‚) */
 						if (!IS_NIL(proto))
 						{
 							uclptr_t args = CAR(proto);

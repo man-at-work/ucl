@@ -8,21 +8,21 @@
 #include <inttypes.h>
 
 #if 1
-/* äëÿ 32-áèòíûõ ìàøèí è, âîçìîæíî, 16-áèòíûõ */
+/* Ð´Ð»Ñ 32-Ð±Ð¸Ñ‚Ð½Ñ‹Ñ… Ð¼Ð°ÑˆÐ¸Ð½ Ð¸, Ð²Ð¾Ð·Ð¼Ð¾Ð¶Ð½Ð¾, 16-Ð±Ð¸Ñ‚Ð½Ñ‹Ñ… */
 #if 1
 typedef uint16_t uclptr_t;
 #define PTR_FORMAT	"%04X"
 #define INDEX_WIDTH	15
 #define PTR_WIDTH	16
 #else
-/* â êà÷åñòâå ïðèêîëà - 8-ðàçðÿäíûå ðåãèñòðû! */
+/* Ð² ÐºÐ°Ñ‡ÐµÑÑ‚Ð²Ðµ Ð¿Ñ€Ð¸ÐºÐ¾Ð»Ð° - 8-Ñ€Ð°Ð·Ñ€ÑÐ´Ð½Ñ‹Ðµ Ñ€ÐµÐ³Ð¸ÑÑ‚Ñ€Ñ‹! */
 typedef uint8_t uclptr_t;
 #define PTR_FORMAT	"%02X"
 #define INDEX_WIDTH	7
 #define PTR_WIDTH	8
 #endif
 #else
-/* äëÿ 32-áèòíûõ è 64-áèòíûõ ìàøèí */
+/* Ð´Ð»Ñ 32-Ð±Ð¸Ñ‚Ð½Ñ‹Ñ… Ð¸ 64-Ð±Ð¸Ñ‚Ð½Ñ‹Ñ… Ð¼Ð°ÑˆÐ¸Ð½ */
 typedef uint32_t uclptr_t;
 #define PTR_FORMAT	"%08X"
 #define INDEX_WIDTH	31
@@ -33,7 +33,7 @@ typedef enum { TAG_ATOM = 0,  TAG_CONS = 1 } ucltag_t;
 typedef enum { GC_FREE = 0, GC_GARBAGE = 1,  GC_IN_USE = 2, GC_TRANSIENT = 3 } uclgc_t;
 
 /* ------------------------------------------------------------------------------------*/
-#pragma pack(1)	/* ñòðóêòóðû â ìàññèâå äîëæíû áûòü ïëîòíî óòðàìáîâàíû, áåç ïðîìåæóòêîâ */
+#pragma pack(1)	/* ÑÑ‚Ñ€ÑƒÐºÑ‚ÑƒÑ€Ñ‹ Ð² Ð¼Ð°ÑÑÐ¸Ð²Ðµ Ð´Ð¾Ð»Ð¶Ð½Ñ‹ Ð±Ñ‹Ñ‚ÑŒ Ð¿Ð»Ð¾Ñ‚Ð½Ð¾ ÑƒÑ‚Ñ€Ð°Ð¼Ð±Ð¾Ð²Ð°Ð½Ñ‹, Ð±ÐµÐ· Ð¿Ñ€Ð¾Ð¼ÐµÐ¶ÑƒÑ‚ÐºÐ¾Ð² */
 typedef struct
 {
 	uclptr_t car;
@@ -53,16 +53,16 @@ typedef struct
 #pragma pack()
 /* ------------------------------------------------------------------------------------*/
 
-#define MEMORY_SIZE	6000		/* êîëè÷åñòâî ÿ÷ååê, íå äîëæíî âûõîäèòü çà ìàêñèìàëüíî âîçìîæíûé àäðåñóåìûé ïðåäåë! */
+#define MEMORY_SIZE	6000		/* ÐºÐ¾Ð»Ð¸Ñ‡ÐµÑÑ‚Ð²Ð¾ ÑÑ‡ÐµÐµÐº, Ð½Ðµ Ð´Ð¾Ð»Ð¶Ð½Ð¾ Ð²Ñ‹Ñ…Ð¾Ð´Ð¸Ñ‚ÑŒ Ð·Ð° Ð¼Ð°ÐºÑÐ¸Ð¼Ð°Ð»ÑŒÐ½Ð¾ Ð²Ð¾Ð·Ð¼Ð¾Ð¶Ð½Ñ‹Ð¹ Ð°Ð´Ñ€ÐµÑÑƒÐµÐ¼Ñ‹Ð¹ Ð¿Ñ€ÐµÐ´ÐµÐ»! */
 #define NIL	(uclptr_t)~0
-#define MSB_MASK (uclptr_t)~(((uclptr_t)~0)>>1) /* ìàñêà ñòàðøåãî áèòà (ToDo: íà ìàøèíàõ ñ äðóãîé endianess íóæíî îïðåäåëÿòü èíà÷å) */
+#define MSB_MASK (uclptr_t)~(((uclptr_t)~0)>>1) /* Ð¼Ð°ÑÐºÐ° ÑÑ‚Ð°Ñ€ÑˆÐµÐ³Ð¾ Ð±Ð¸Ñ‚Ð° (ToDo: Ð½Ð° Ð¼Ð°ÑˆÐ¸Ð½Ð°Ñ… Ñ Ð´Ñ€ÑƒÐ³Ð¾Ð¹ endianess Ð½ÑƒÐ¶Ð½Ð¾ Ð¾Ð¿Ñ€ÐµÐ´ÐµÐ»ÑÑ‚ÑŒ Ð¸Ð½Ð°Ñ‡Ðµ) */
 
 typedef struct
 {
-	cell_t uclmem[MEMORY_SIZE]; /* îñíîâíàÿ ïàìÿòü äàííûõ */
-	int uclmem_free; /* ïðîñòî ñ÷¸ò÷èê */
-	uclptr_t freeptr; /* èíäåêñ ïåðâîé ÿ÷åéêè ñïèñêà freelist */
-	uclptr_t environment; /* ðàáî÷åå îêðóæåíèå */
+	cell_t uclmem[MEMORY_SIZE]; /* Ð¾ÑÐ½Ð¾Ð²Ð½Ð°Ñ Ð¿Ð°Ð¼ÑÑ‚ÑŒ Ð´Ð°Ð½Ð½Ñ‹Ñ… */
+	int uclmem_free; /* Ð¿Ñ€Ð¾ÑÑ‚Ð¾ ÑÑ‡Ñ‘Ñ‚Ñ‡Ð¸Ðº */
+	uclptr_t freeptr; /* Ð¸Ð½Ð´ÐµÐºÑ Ð¿ÐµÑ€Ð²Ð¾Ð¹ ÑÑ‡ÐµÐ¹ÐºÐ¸ ÑÐ¿Ð¸ÑÐºÐ° freelist */
+	uclptr_t environment; /* Ñ€Ð°Ð±Ð¾Ñ‡ÐµÐµ Ð¾ÐºÑ€ÑƒÐ¶ÐµÐ½Ð¸Ðµ */
 	uclptr_t *context;
 	uclptr_t min_free;
 	uclptr_t max_allocated;
@@ -70,7 +70,7 @@ typedef struct
 
 extern ucl_machine_t *m;
 
-/* ìàêðîñû äîñòóïà ê ïîëÿì ÿ÷åéêè */
+/* Ð¼Ð°ÐºÑ€Ð¾ÑÑ‹ Ð´Ð¾ÑÑ‚ÑƒÐ¿Ð° Ðº Ð¿Ð¾Ð»ÑÐ¼ ÑÑ‡ÐµÐ¹ÐºÐ¸ */
 #define IS_NIL(i) 		(i == NIL)
 #define CONTAINER(i)	m->uclmem[i].container
 #define CAR(i)			CONTAINER(i).car

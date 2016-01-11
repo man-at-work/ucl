@@ -9,7 +9,7 @@
 
 static ucl_machine_t machine =
 {
-	//cell_t uclmem[MEMORY_SIZE]; /* основная память данных */
+	//cell_t uclmem[MEMORY_SIZE]; /* РѕСЃРЅРѕРІРЅР°СЏ РїР°РјСЏС‚СЊ РґР°РЅРЅС‹С… */
 	.uclmem_free = MEMORY_SIZE,
 	.freeptr = 0,
 	.environment = NIL,
@@ -72,7 +72,7 @@ void init_cells(void)
 		TAG(i) = TAG_CONS;
 		CAR(i) = NIL;
 		GC(i) = GC_FREE;
-		CDR(i) = (i == (MEMORY_SIZE-1)) ? NIL : (i+1);	/* ~0 = nil, 0 = null - две разных сущности! */
+		CDR(i) = (i == (MEMORY_SIZE-1)) ? NIL : (i+1);	/* ~0 = nil, 0 = null - РґРІРµ СЂР°Р·РЅС‹С… СЃСѓС‰РЅРѕСЃС‚Рё! */
 	}
 }
 #pragma GCC diagnostic warning "-Woverflow"
@@ -117,10 +117,10 @@ static void garbage_collector_sweep (void)
 		{
 			switch (TAG(i))
 			{
-				case TAG_ATOM: destroy_atom(i); break; /* удаляет в т.ч. и managed-данные */
+				case TAG_ATOM: destroy_atom(i); break; /* СѓРґР°Р»СЏРµС‚ РІ С‚.С‡. Рё managed-РґР°РЅРЅС‹Рµ */
 				case TAG_CONS:
 				{
-					cell_release(i); /* потому что траверс списка здесь не требуется, мы всё равно проходим по всем ячейкам */
+					cell_release(i); /* РїРѕС‚РѕРјСѓ С‡С‚Рѕ С‚СЂР°РІРµСЂСЃ СЃРїРёСЃРєР° Р·РґРµСЃСЊ РЅРµ С‚СЂРµР±СѓРµС‚СЃСЏ, РјС‹ РІСЃС‘ СЂР°РІРЅРѕ РїСЂРѕС…РѕРґРёРј РїРѕ РІСЃРµРј СЏС‡РµР№РєР°Рј */
 				}
 				break;
 			};
@@ -132,20 +132,20 @@ static void garbage_collector_sweep (void)
 void garbage_collector_mark_and_sweep (void)
 {
 	int i;
-	/* изначально помечаем все ячейки как мусор */
+	/* РёР·РЅР°С‡Р°Р»СЊРЅРѕ РїРѕРјРµС‡Р°РµРј РІСЃРµ СЏС‡РµР№РєРё РєР°Рє РјСѓСЃРѕСЂ */
 	for (i = 0; i < MEMORY_SIZE; i++)
 	{
 		if (
 				(!MANAGED(i))
 				&& ( !( (GC(i) == GC_FREE) || (GC(i) == GC_TRANSIENT) ) )
 			)
-		/* free и managed-ячейки не трогаем, их удаление - ответственность самого класса, а не GC */
+		/* free Рё managed-СЏС‡РµР№РєРё РЅРµ С‚СЂРѕРіР°РµРј, РёС… СѓРґР°Р»РµРЅРёРµ - РѕС‚РІРµС‚СЃС‚РІРµРЅРЅРѕСЃС‚СЊ СЃР°РјРѕРіРѕ РєР»Р°СЃСЃР°, Р° РЅРµ GC */
 		{
 			GC(i) = GC_GARBAGE;
 		};
 	}
-	/* теперь надо пройти по окружению и пометить все связанные с корнем (environment) как GC_IN_USE
-	 * environment это список списков (с заранее неизвестной степенью вложенности!), пометка должна быть рекурсивной
+	/* С‚РµРїРµСЂСЊ РЅР°РґРѕ РїСЂРѕР№С‚Рё РїРѕ РѕРєСЂСѓР¶РµРЅРёСЋ Рё РїРѕРјРµС‚РёС‚СЊ РІСЃРµ СЃРІСЏР·Р°РЅРЅС‹Рµ СЃ РєРѕСЂРЅРµРј (environment) РєР°Рє GC_IN_USE
+	 * environment СЌС‚Рѕ СЃРїРёСЃРѕРє СЃРїРёСЃРєРѕРІ (СЃ Р·Р°СЂР°РЅРµРµ РЅРµРёР·РІРµСЃС‚РЅРѕР№ СЃС‚РµРїРµРЅСЊСЋ РІР»РѕР¶РµРЅРЅРѕСЃС‚Рё!), РїРѕРјРµС‚РєР° РґРѕР»Р¶РЅР° Р±С‹С‚СЊ СЂРµРєСѓСЂСЃРёРІРЅРѕР№
 	 * */
 	garbage_collector_mark (m->environment);
 	garbage_collector_sweep();

@@ -11,7 +11,7 @@
 #include "memory.h"
 #include "types.h"
 
-/* обёртка для целочисленных типов */
+/* РѕР±С‘СЂС‚РєР° РґР»СЏ С†РµР»РѕС‡РёСЃР»РµРЅРЅС‹С… С‚РёРїРѕРІ */
 #define UCL_INT(x) (void*)(intptr_t){ x }
 
 ucltype_t* atom_type_of(uclptr_t atom);
