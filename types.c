@@ -15,7 +15,7 @@ ucltype_t* atom_type_of(uclptr_t atom)
 
 int type_debug(unsigned int id)
 {
-	if (IS_NIL(id))/*(id == nil.car.index)*/ { printf ("nil"); return 0; }
+	if (IS_NIL(id)) { printf ("nil"); return 0; }
 	if (id > TYPES_TOTAL) { printf ("Unknown type 0x"PTR_FORMAT, id); return 0; }
 	else
 	{
@@ -128,7 +128,6 @@ static void* INTEGER32_data (uclptr_t exemplair)
 	if (sizeof(int32_t) != sizeof(uclptr_t))
 	{
 		uclptr_t storage_index = (exemplair);
-		//return (void*)*(intptr_t**)&uclmem[storage_index];
 		return (void*)*(intptr_t**)&CONTAINER(storage_index);
 	}
 	else return (void*)(intptr_t)(exemplair);
@@ -144,7 +143,6 @@ static void INTEGER32_destroy (uclptr_t int_exemplair)
 
 static int INT32_print (uclptr_t exemplair_ptr, char *buffer)
 {
-	//int32_t i = (raw_printout = (sizeof(int32_t) != sizeof(uclptr_t))) ? *(int32_t*)&uclmem[exemplair_ptr] : exemplair_ptr;
 	int32_t i = (intptr_t)INTEGER32_data(exemplair_ptr);
 	int n = snprintf (0, 0, "%d", i) + 1;
 	return (buffer == 0) ? n : snprintf (buffer, n, "%d", (int32_t)i);
@@ -152,7 +150,6 @@ static int INT32_print (uclptr_t exemplair_ptr, char *buffer)
 
 static int UINT32_print (uclptr_t exemplair_ptr, char *buffer)
 {
-	//uint32_t u = (raw_printout = (sizeof(uint32_t) != sizeof(uclptr_t))) ? *(uint32_t*)&uclmem[exemplair_ptr] : exemplair_ptr;
 	uint32_t u = (uintptr_t)INTEGER32_data(exemplair_ptr);
 	int n = snprintf (0, 0, "%d", u) + 1;
 	return (buffer == 0) ? n : snprintf (buffer, n, "%u", (uint32_t)u);
@@ -161,21 +158,8 @@ static int UINT32_print (uclptr_t exemplair_ptr, char *buffer)
 static int INTEGER32_compare (uclptr_t d1, uclptr_t d2)
 {
 	int i1, i2;
-#if 0
-	if (sizeof(int32_t) != sizeof(uclptr_t))
-	{
-		i1 = *(int32_t*)&uclmem[d1];
-		i2 = *(int32_t*)&uclmem[d2];
-	}
-	else
-	{
-		i1 = d1;
-		i2 = d2;
-	}
-#else
 	i1 = (intptr_t)INTEGER32_data(d1);
 	i2 = (intptr_t)INTEGER32_data(d2);
-#endif
 	return (i1 == i2);
 }
 
@@ -228,7 +212,6 @@ static uclptr_t STRING_create (const void* sample_data)
 		if (storage_index != NIL)
 		{
 			int length = strlen(sample_data) + 1;
-			//char **storage_cell_ptr = (char**)&uclmem[storage_index];
 			char **storage_cell_ptr = (char**)&CONTAINER(storage_index);
 			MANAGED(storage_index) = 1;
 			*storage_cell_ptr = (char*)malloc(length);
@@ -280,7 +263,6 @@ static void STRING_destroy (uclptr_t string_exemplair)
 
 static int STRING_print (uclptr_t string_exemplair, char *buffer)
 {
-	//char* str = *(char**)&uclmem[string_exemplair];
 	char *str = STRING_data(string_exemplair);
 	int length = strlen(str) + 3;
  	return (buffer == 0) ? length : snprintf (buffer, length, "\"%s\"", str);
@@ -288,9 +270,7 @@ static int STRING_print (uclptr_t string_exemplair, char *buffer)
 
 static int STRING_compare (uclptr_t d1, uclptr_t d2)
 {
-	//char* str1 = *(char**)&uclmem[d1];
 	char* str1 = STRING_data(d1);
-	//char* str2 = *(char**)&uclmem[d2];
 	char* str2 = STRING_data(d2);
 	return ((str1 != 0) && (str2 != 0) && (strcmp(str1, str2)==0));
 }
@@ -431,7 +411,6 @@ static int VECTOR_compare (uclptr_t d1, uclptr_t d2)
 
 uclptr_t VECTOR_set_element (uclptr_t vector_exemplair, uclptr_t u32_index, uclptr_t newdata)
 {
-	//ucl_vector_t *vector = VECTOR_data(vector_exemplair);
 	if (CAR(vector_exemplair) != UCL_TYPE_VECTOR)
 	{
 		printf ("Error: type of first argument is %s, wich is not of the expected type VECTOR\n", atom_type_of(vector_exemplair)->name );
@@ -509,7 +488,6 @@ static uclptr_t SYMBOL_create (const void* symbol_name)
 
 			if (sizeof(char*) <= sizeof(cell_t)) /* указатель влезает на место ячейки */
 			{
-				//char **storage_cell_ptr = (char**)&uclmem[storage_index];
 				char **storage_cell_ptr = (char**)&CONTAINER(storage_index);
 				char *s, *r = (char*)symbol_name;
 				MANAGED(storage_index) = 1;
@@ -534,9 +512,7 @@ static uclptr_t SYMBOL_create (const void* symbol_name)
 		strhack_t strhack = { .ptr = 0 };
 		char *s = (char *)symbol_name;
 		for (i=0; i<l; i++) { strhack.str[i] = toupper(s[i]); }
-		//for (i=0; i<l; i++) { strhack.str[i] = s[i]; }
 		MARK_SYMBOL_PACKED(strhack.ptr); /* выставляем старший бит */
-		//printf ("Packed symbol: <"PTR_FORMAT">\n", strhack.ptr);
 		return strhack.ptr;
 	}
  	return NIL;
@@ -557,7 +533,6 @@ static void* SYMBOL_data (uclptr_t symbol_exemplair)
 	{
 		if (sizeof(char*) <= sizeof(cell_t)) /* указатель влезает на место ячейки */
 		{
-			//string_ptr = *(char**)&uclmem[symbol_exemplair];
 			string_ptr = *(char**)&CONTAINER(symbol_exemplair);
 		}
 		else
@@ -576,7 +551,6 @@ static void SYMBOL_destroy (uclptr_t symbol_exemplair)
 	}
 	else
 	{
-		//char* str = *(char**)&uclmem[symbol_exemplair];
 		char *str = SYMBOL_data (symbol_exemplair);
 		free(str);
 		cell_release(symbol_exemplair);
@@ -585,27 +559,8 @@ static void SYMBOL_destroy (uclptr_t symbol_exemplair)
 
 static int SYMBOL_print (uclptr_t symbol_exemplair, char *buffer)
 {
-	int string_length = 0;
-#if 0
-	char *string_ptr = 0;
-	if (PACKED_SYMBOL(symbol_exemplair)) /* упакованный символ */
-	{
-		strhack_t strhack;
-		memset (strhack.str, 0, sizeof(strhack.str));
-		strhack.ptr = GET_SYMBOL_DEMARKED(symbol_exemplair);
-		string_ptr = strhack.str;
-		string_length = strlen (strhack.str) + 1;
-	}
-	else
-	{
-		string_ptr = *(char**)&uclmem[symbol_exemplair];
-		string_length = strlen(string_ptr) + 1;
-		raw_printout = 1;
-	}
-#else
-	char *string_ptr = SYMBOL_data(symbol_exemplair);
-	string_length = strlen(string_ptr) + 1;
-#endif
+        char *string_ptr = SYMBOL_data(symbol_exemplair);
+	int string_length = strlen(string_ptr) + 1;
 	return (buffer == 0) ? string_length : snprintf (buffer, string_length, "%s", string_ptr);
 }
 
