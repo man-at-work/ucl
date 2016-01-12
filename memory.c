@@ -27,7 +27,7 @@ uclptr_t cell_alloc (void)
 		if (m->freeptr != NIL)
 		{
 			uclptr_t n = m->freeptr;
-			m->freeptr = CDR(m->freeptr);
+			m->freeptr = _CDR(m->freeptr);
 			m->uclmem_free --;
 			MANAGED(n) = 0;
 			GC(n) = GC_IN_USE;
@@ -53,10 +53,10 @@ uclptr_t cell_alloc (void)
 #pragma GCC diagnostic ignored "-Woverflow"
 uclptr_t cell_release (uclptr_t c)
 {
-	uclptr_t r = CDR(c);
+	uclptr_t r = _CDR(c);
 	TAG(c) = TAG_CONS;
-	CAR(c) = NIL;
-	CDR(c) = m->freeptr;
+	_CAR(c) = NIL;
+	_CDR(c) = m->freeptr;
 	MANAGED(c) = 0;
 	GC(c) = GC_FREE;
 	m->freeptr = c;
@@ -70,9 +70,9 @@ void init_cells(void)
 	for (i = 0; i < MEMORY_SIZE; i++)
 	{
 		TAG(i) = TAG_CONS;
-		CAR(i) = NIL;
+		_CAR(i) = NIL;
 		GC(i) = GC_FREE;
-		CDR(i) = (i == (MEMORY_SIZE-1)) ? NIL : (i+1);	/* ~0 = nil, 0 = null - две разных сущности! */
+		_CDR(i) = (i == (MEMORY_SIZE-1)) ? NIL : (i+1);	/* ~0 = nil, 0 = null - две разных сущности! */
 	}
 }
 #pragma GCC diagnostic warning "-Woverflow"
@@ -86,9 +86,9 @@ static void garbage_collector_mark_atom (uclptr_t atom)
 static void garbage_collector_mark (uclptr_t lst)
 {
 	uclptr_t i;
-	for (i = lst; !IS_NIL(i); i=CDR(i))
+	for (i = lst; !IS_NIL(i); i=_CDR(i))
 	{
-		uclptr_t entity = CAR(i);
+		uclptr_t entity = _CAR(i);
 		if (!IS_NIL(entity))
 		{
 			if (GC(i) == GC_TRANSIENT) break;
@@ -99,9 +99,9 @@ static void garbage_collector_mark (uclptr_t lst)
 				case TAG_CONS: garbage_collector_mark(entity); break;
 			}
 
-			if ( !IS_NIL(CDR(i)) && ((TAG(CDR(i)) == TAG_ATOM)) )
+			if ( !IS_NIL(_CDR(i)) && ((TAG(_CDR(i)) == TAG_ATOM)) )
 			{
-				garbage_collector_mark_atom(CDR(i));
+				garbage_collector_mark_atom(_CDR(i));
 				break;
 			}
 		}
@@ -162,7 +162,7 @@ void memory_dump(unsigned int num)
 		for (i = 0; i < n; i++)
 		{
 			printf (PTR_FORMAT": ", i);
-			printf ("[ "PTR_FORMAT".%u : "PTR_FORMAT" ] %c ", CAR(i), TAG(i), CDR(i),
+			printf ("[ "PTR_FORMAT".%u : "PTR_FORMAT" ] %c ", _CAR(i), TAG(i), _CDR(i),
 						(GC(i)==GC_IN_USE)?'U':
 						(GC(i)==GC_GARBAGE)?'G':
 						(GC(i)==GC_TRANSIENT)?'T':
@@ -174,7 +174,7 @@ void memory_dump(unsigned int num)
 	#if (PTR_WIDTH == 16)
 			printf ("%08X ", (uintptr_t)*(void**)&CONTAINER(i));
 	#elif (PTR_WIDTH == 32)
-			printf ("%08X.%08X ", (uintptr_t)*(void**)&CAR(i), (uintptr_t)*(void**)&CDR(i));
+			printf ("%08X.%08X ", (uintptr_t)*(void**)&_CAR(i), (uintptr_t)*(void**)&_CDR(i));
 	#else
 			printf ("???");
 	#endif
@@ -182,7 +182,7 @@ void memory_dump(unsigned int num)
 			else switch (TAG(i))
 			{
 				case TAG_ATOM:
-				if (type_debug(CAR(i)))
+				if (type_debug(_CAR(i)))
 				{
 					printf (":");
 					print_this_atom(i);
@@ -191,7 +191,7 @@ void memory_dump(unsigned int num)
 
 				case TAG_CONS:
 				{
-					printf ("->"PTR_FORMAT, CDR(i));
+					printf ("->"PTR_FORMAT, _CDR(i));
 				};
 				break;
 			}

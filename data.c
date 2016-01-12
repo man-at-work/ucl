@@ -19,10 +19,10 @@ void *atom_data_of(uclptr_t atom);
 
 void* atom_data_of (uclptr_t atom)
 {
-	int type_id = CAR(atom);
+	int type_id = _CAR(atom);
 	ucltype_t *t = type(type_id);
 	int type_valid = (t != 0);
-	return (void*)((type_valid && (t->data != 0)) ? t->data(CDR(atom)) : 0);
+	return (void*)((type_valid && (t->data != 0)) ? t->data(_CDR(atom)) : 0);
 }
 
 uclptr_t create_atom (ucl_typeid_t type_id, const void *sample_data)
@@ -33,8 +33,8 @@ uclptr_t create_atom (ucl_typeid_t type_id, const void *sample_data)
 		int type_valid = 0;
 		ucltype_t *t = type(type_id);
 		TAG(n) = TAG_ATOM;
-		CAR(n) = (type_valid = (t != 0)) ? type_id : NIL;
-		CDR(n) = (type_valid && (t->create != 0)) ? t->create(sample_data) : NIL;
+		_CAR(n) = (type_valid = (t != 0)) ? type_id : NIL;
+		_CDR(n) = (type_valid && (t->create != 0)) ? t->create(sample_data) : NIL;
 		return n;
 	}
 	else
@@ -49,10 +49,10 @@ uclptr_t copy_atom (uclptr_t atom)
 	if (!IS_NIL(n))
 	{
 		int type_id;
-		int type_valid = ((CAR(n) = (type_id = CAR(atom))) <= TYPES_TOTAL);
+		int type_valid = ((_CAR(n) = (type_id = _CAR(atom))) <= TYPES_TOTAL);
 		ucltype_t *t = type(type_id);
-		void *sample_data = ((type_valid && (t->data != 0)) ? t->data(CDR(atom)) : 0);
-		CDR(n) = (type_valid && (t->create != 0)) ? t->create(sample_data) : NIL;
+		void *sample_data = ((type_valid && (t->data != 0)) ? t->data(_CDR(atom)) : 0);
+		_CDR(n) = (type_valid && (t->create != 0)) ? t->create(sample_data) : NIL;
 		TAG(n) = TAG_ATOM;
 		return n;
 	}
@@ -67,12 +67,12 @@ int compare_atoms (uclptr_t atom1, uclptr_t atom2)
 	if (IS_NIL(atom1) || IS_NIL(atom2)) return 1; /* сравнение NIL с NIL должно быть корректным*/
 	if ((!IS_NIL(atom1)) && (!IS_NIL(atom2)))
 	{
-		int type1_id = CAR(atom1);
-		int type2_id = CAR(atom2);
+		int type1_id = _CAR(atom1);
+		int type2_id = _CAR(atom2);
 		ucltype_t *t = type(type1_id);
 
 		if (type1_id != type2_id) return 0; /* разные типы - как правило, корректно сравнивать нельзя */
-		return t->compare (CDR(atom1), CDR(atom2));
+		return t->compare (_CDR(atom1), _CDR(atom2));
 	}
 	return 0;
 }
@@ -83,8 +83,8 @@ uclptr_t cons (uclptr_t CarIndex, uclptr_t Cdr)
 	if (!IS_NIL(n))
 	{
 		TAG(n) = TAG_CONS;
-		CAR(n) = CarIndex;
-		CDR(n) = Cdr;
+		_CAR(n) = CarIndex;
+		_CDR(n) = Cdr;
 		return n;
 	}
 	else
@@ -98,8 +98,8 @@ void destroy_atom (uclptr_t atom)
 	//if ((atom != nil.cdr) && (atom != nil.car.index))
 	if (!IS_NIL(atom))
 	{
-		ucltype_t *t = type(CAR(atom));
-		uclptr_t data = CDR(atom);
+		ucltype_t *t = type(_CAR(atom));
+		uclptr_t data = _CDR(atom);
 		if (t->destroy != 0)
 		{
 			t->destroy(data); /* удаляем данные */
@@ -114,20 +114,20 @@ uclptr_t list_transpose(uclptr_t lst)
 {
 	uclptr_t i;
 	uclptr_t r = NIL;
-	if ((!IS_NIL(CDR(lst))) && (CDR(lst) < MEMORY_SIZE) && (TAG(CDR(lst)) == TAG_ATOM))
+	if ((!IS_NIL(_CDR(lst))) && (_CDR(lst) < MEMORY_SIZE) && (TAG(_CDR(lst)) == TAG_ATOM))
 	{
-		r = cons (CAR(lst), CDR(lst));
+		r = cons (_CAR(lst), _CDR(lst));
 		cell_release(lst);
 	}
 	else for (i = lst; !IS_NIL(i); i = cell_release(i) )
 	{
-		uclptr_t entity = CAR(i);
-		uclptr_t tail = CDR(i);
+		uclptr_t entity = _CAR(i);
+		uclptr_t tail = _CDR(i);
 		r = cons(((TAG(entity) == TAG_ATOM) ? entity : list_transpose (entity)), r);
 		if ( !IS_NIL(tail) && (TAG(tail) == TAG_ATOM) )
 		{
 			printf ("Transpose error:\n");
-			print_this_atom (CDR(i));
+			print_this_atom (_CDR(i));
 			printf(" is not a list!\n");
 			exit(-1);
 		}
@@ -157,10 +157,10 @@ uclptr_t list_delete (uclptr_t lst)
 {
 	uclptr_t i, n;
 #if 0
-	if ((!IS_NIL(CDR(lst))) && (CDR(lst) < MEMORY_SIZE) && (TAG(CDR(lst)) == TAG_ATOM))
+	if ((!IS_NIL(_CDR(lst))) && (_CDR(lst) < MEMORY_SIZE) && (TAG(_CDR(lst)) == TAG_ATOM))
 	{
-		uclptr_t car_entity = CAR(lst);
-		uclptr_t cdr_entity = CDR(lst);
+		uclptr_t car_entity = _CAR(lst);
+		uclptr_t cdr_entity = _CDR(lst);
 		switch (TAG(car_entity))
 		{
 			case TAG_ATOM:
@@ -182,8 +182,8 @@ uclptr_t list_delete (uclptr_t lst)
 #else
 	for (i = lst; !IS_NIL(i); i = n )
 	{
-		uclptr_t car_entity = CAR(i);
-		uclptr_t cdr_entity = CDR(i);
+		uclptr_t car_entity = _CAR(i);
+		uclptr_t cdr_entity = _CDR(i);
 		if (!IS_NIL(car_entity))
 		{
 			switch (TAG(car_entity))
@@ -218,11 +218,11 @@ void debug_list (uclptr_t lst)
 {
 	uclptr_t i;
 	printf ("( ");
-	for (i = lst; !IS_NIL(i); i = CDR(i) )
+	for (i = lst; !IS_NIL(i); i = _CDR(i) )
 	{
-		if (CAR(i) != NIL)
+		if (_CAR(i) != NIL)
 		{
-			uclptr_t entity = CAR(i);
+			uclptr_t entity = _CAR(i);
 			switch (TAG(entity))
 			{
 				case TAG_CONS:
@@ -243,13 +243,13 @@ void debug_list (uclptr_t lst)
 		}
 		else
 		{
-			print_this_atom (CAR(i));
+			print_this_atom (_CAR(i));
 			printf (" ");
 		};
-		if ( !IS_NIL(CDR(i)) && ((TAG(CDR(i)) == TAG_ATOM)) )
+		if ( !IS_NIL(_CDR(i)) && ((TAG(_CDR(i)) == TAG_ATOM)) )
 		{
 			printf (". ");
-			print_this_atom(CDR(i));
+			print_this_atom(_CDR(i));
 			printf (" ");
 			break;
 		}
@@ -274,16 +274,16 @@ int print_atom(uclptr_t atom, char *buffer)
 	}
 	else
 	{
-		ucltype_t *t = type(CAR(atom));
-		uclptr_t data = CDR(atom);
-		int n = ((t->print == 0) ? snprintf (0, 0, PTR_FORMAT, data) : t->print(data, 0)) + 2;
+		ucltype_t *t = type(_CAR(atom));
+		uclptr_t data = _CDR(atom);
+		int n = ((t->print == 0) ? snprintf (0, 0, "[%s]:"PTR_FORMAT, t->name, data) : t->print(data, 0)) + 2;
 		if (buffer == 0)
 		{
 			return n;
 		}
 		else
 		{
-			return (t->print == 0) ? snprintf (buffer, n, PTR_FORMAT, data) : (t->print(data, buffer));
+			return (t->print == 0) ? snprintf (buffer, n, "[%s]:"PTR_FORMAT, t->name, data) : (t->print(data, buffer));
 		}
 	}
 
@@ -333,11 +333,11 @@ uclptr_t list_remove_element (uclptr_t lst, uclptr_t elm)
 	{
 		return cell_release(lst);
 	}
-	for (i = lst; !IS_NIL(i); i = CDR(i))
+	for (i = lst; !IS_NIL(i); i = _CDR(i))
 	{
-		if (CDR(i) == elm)
+		if (_CDR(i) == elm)
 		{
-			return (CDR(i) = cell_release(CDR(i)));
+			return (_CDR(i) = cell_release(_CDR(i)));
 		}
 	}
 	return NIL;

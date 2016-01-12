@@ -73,13 +73,16 @@ extern ucl_machine_t *m;
 /* макросы доступа к полям ячейки */
 #define IS_NIL(i) 		(i == NIL)
 #define CONTAINER(i)	m->uclmem[i].container
-#define CAR(i)			CONTAINER(i).car
-#define CDR(i)			CONTAINER(i).cdr
-#define CARNIL(i) 		((IS_NIL(i))?NIL:CAR(i))
-#define CDRNIL(i) 		((IS_NIL(i))?NIL:CDR(i))
+#define _CAR(i)			CONTAINER(i).car
+#define _CDR(i)			CONTAINER(i).cdr
+#define CAR(i) 			((IS_NIL(i))?NIL:_CAR(i))
+#define CDR(i) 			((IS_NIL(i))?NIL:_CDR(i))
 #define TAG(i)			m->uclmem[i].flags.tag
 #define GC(i)			m->uclmem[i].flags.gc
 #define MANAGED(i)		m->uclmem[i].flags.managed
+
+#define CADR(i)			CAR(CDR(i))
+#define CADDR(i)		CAR(CDR(CDR(i)))
 
 void init_cells(void);
 void memory_dump(unsigned int num);

@@ -1,7 +1,7 @@
 /*
  * main.c
  *
- *  Created on: 3 —è–Ω–≤. 2016 –≥.
+ *  Created on: 3 ˇÌ‚. 2016 „.
  *      Author: Tangaroa
  */
 
@@ -15,15 +15,15 @@
 #include "data.h"
 #include "types.h"
 
-uclptr_t symbol_intern (uclptr_t *symlist, uclptr_t symbol); /* –ò–Ω—Ç–µ—Ä–Ω–∏—Ä—É–µ—Ç —Å–∏–º–≤–æ–ª (–∏—â–µ—Ç –ø–æ –æ–±—Ä–∞–∑—Ü—É).
-–ï—Å–ª–∏ —Å–∏–º–≤–æ–ª –Ω–∞–π–¥–µ–Ω, –≤–æ–∑–≤—Ä–∞—â–∞–µ—Ç—Å—è —É–∫–∞–∑–∞—Ç–µ–ª—å –Ω–∞ –µ–≥–æ –∑–∞–ø–∏—Å—å, –ø—Ä–µ–¥–æ—Å—Ç–∞–≤–ª–µ–Ω–Ω—ã–π –æ–±—Ä–∞–∑–µ—Ü —Å—Ç–∏—Ä–∞–µ—Ç—Å—è (—Ç.–∫. –µ–≥–æ –∫–æ–ø–∏—è —É–∂–µ –µ—Å—Ç—å –≤ –ø–∞–º—è—Ç–∏).
-–ï—Å–ª–∏ —Å–∏–º–≤–æ–ª –Ω–µ –Ω–∞–π–¥–µ–Ω, —Å–æ–∑–¥–∞—ë—Ç—Å—è –Ω–æ–≤–∞—è –∑–∞–ø–∏—Å—å, —Å–æ–¥–µ—Ä–∂–∞—â–∞—è —Ç–æ–ª—å–∫–æ –∏–º—è —Å–∏–º–≤–æ–ª–∞ (–ø—Ä–µ–¥–æ—Å—Ç–∞–≤–ª–µ–Ω–Ω—ã–π –æ–±—Ä–∞–∑–µ—Ü) –∏ –≤–æ–∑–≤—Ä–∞—â–∞–µ—Ç—Å—è —É–∫–∞–∑–∞—Ç–µ–ª—å –Ω–∞ –Ω–µ—ë.
+uclptr_t symbol_intern (uclptr_t *symlist, uclptr_t symbol); /* »ÌÚÂÌËÛÂÚ ÒËÏ‚ÓÎ (Ë˘ÂÚ ÔÓ Ó·‡ÁˆÛ).
+≈ÒÎË ÒËÏ‚ÓÎ Ì‡È‰ÂÌ, ‚ÓÁ‚‡˘‡ÂÚÒˇ ÛÍ‡Á‡ÚÂÎ¸ Ì‡ Â„Ó Á‡ÔËÒ¸, ÔÂ‰ÓÒÚ‡‚ÎÂÌÌ˚È Ó·‡ÁÂˆ ÒÚË‡ÂÚÒˇ (Ú.Í. Â„Ó ÍÓÔËˇ ÛÊÂ ÂÒÚ¸ ‚ Ô‡ÏˇÚË).
+≈ÒÎË ÒËÏ‚ÓÎ ÌÂ Ì‡È‰ÂÌ, ÒÓÁ‰‡∏ÚÒˇ ÌÓ‚‡ˇ Á‡ÔËÒ¸, ÒÓ‰ÂÊ‡˘‡ˇ ÚÓÎ¸ÍÓ ËÏˇ ÒËÏ‚ÓÎ‡ (ÔÂ‰ÓÒÚ‡‚ÎÂÌÌ˚È Ó·‡ÁÂˆ) Ë ‚ÓÁ‚‡˘‡ÂÚÒˇ ÛÍ‡Á‡ÚÂÎ¸ Ì‡ ÌÂ∏.
  */
-void symbol_forget (uclptr_t *symlist, uclptr_t symbol); /* –∑–∞–±—ã–≤–∞–µ–º —Å–∏–º–≤–æ–ª (—É–¥–∞–ª—è–µ–º –µ–≥–æ –∏–∑ —Å–ø–∏—Å–∫–∞) */
+void symbol_forget (uclptr_t *symlist, uclptr_t symbol); /* Á‡·˚‚‡ÂÏ ÒËÏ‚ÓÎ (Û‰‡ÎˇÂÏ Â„Ó ËÁ ÒÔËÒÍ‡) */
 void symbols_purge(uclptr_t *symlist);
-uclptr_t symbol_lookup (uclptr_t symlist, uclptr_t symbol); /* —Ä–∞–∑—ã—Å–∫–∏–≤–∞–µ—Ç –≤ —É–∫–∞–∑–∞–Ω–Ω–æ–º —Å–ø–∏—Å–∫–µ –∑–∞–ø–∏—Å—å –æ —Å–∏–º–≤–æ–ª–µ, –∑–∞ –æ–±—Ä–∞–∑–µ—Ü –±–µ—Ä—ë—Ç –ø—Ä–µ–¥–æ—Å—Ç–∞–≤–ª–µ–Ω–Ω—ã–π —Å–∏–º–≤–æ–ª.
-–ï—Å–ª–∏ —Å–∏–º–≤–æ–ª –Ω–∞–π–¥–µ–Ω, –≤–æ–∑–≤—Ä–∞—â–∞–µ—Ç—Å—è —É–∫–∞–∑–∞—Ç–µ–ª—å –Ω–∞ –µ–≥–æ –∑–∞–ø–∏—Å—å.
-–ï—Å–ª–∏ —Å–∏–º–≤–æ–ª –Ω–µ –Ω–∞–π–¥–µ–Ω, –≤–æ–∑–≤—Ä–∞—â–∞–µ—Ç—Å—è NIL */
+uclptr_t symbol_lookup (uclptr_t symlist, uclptr_t symbol); /* ‡Á˚ÒÍË‚‡ÂÚ ‚ ÛÍ‡Á‡ÌÌÓÏ ÒÔËÒÍÂ Á‡ÔËÒ¸ Ó ÒËÏ‚ÓÎÂ, Á‡ Ó·‡ÁÂˆ ·Â∏Ú ÔÂ‰ÓÒÚ‡‚ÎÂÌÌ˚È ÒËÏ‚ÓÎ.
+≈ÒÎË ÒËÏ‚ÓÎ Ì‡È‰ÂÌ, ‚ÓÁ‚‡˘‡ÂÚÒˇ ÛÍ‡Á‡ÚÂÎ¸ Ì‡ Â„Ó Á‡ÔËÒ¸.
+≈ÒÎË ÒËÏ‚ÓÎ ÌÂ Ì‡È‰ÂÌ, ‚ÓÁ‚‡˘‡ÂÚÒˇ NIL */
 
 uclptr_t symbol_lookup_scoped (uclptr_t scope, uclptr_t symbol);
 
@@ -45,7 +45,7 @@ const ucl_operator_t* get_operator (int i);
 void operator_describe (const ucl_operator_t *);
 uclptr_t operator_call (uclptr_t funcname, uclptr_t argslist);
 
-/* —Å–∞–º–æ–µ –∏–Ω—Ç–µ—Ä–µ—Å–Ω–æ–µ - —Ç—É—Ç */
+/* Ò‡ÏÓÂ ËÌÚÂÂÒÌÓÂ - ÚÛÚ */
 uclptr_t eval (uclptr_t entity);
 
 /* ----------------------------------------------------------- */
@@ -56,22 +56,32 @@ int main(void)
 	uclptr_t arr=NIL;
 	init_cells();
 
-	m->environment = cons ( NIL, m->environment ); /* –Ω–∞—á–∞–ª—å–Ω—ã–π —É—Ä–æ–≤–µ–Ω—å –æ–∫—Ä—É–∂–µ–Ω–∏—è —É—Ä–æ–≤–µ–Ω—å –∫–æ–Ω—Ç–µ–∫—Å—Ç–∞ */
-	m->context = &CAR(m->environment);
+	m->environment = cons ( NIL, m->environment ); /* Ì‡˜‡Î¸Ì˚È ÛÓ‚ÂÌ¸ ÓÍÛÊÂÌËˇ ÛÓ‚ÂÌ¸ ÍÓÌÚÂÍÒÚ‡ */
+	m->context = &_CAR(m->environment);
 
 	symbol_intern (m->context, create_atom (UCL_TYPE_SYMBOL, "foxtrot"));
 	symbol_set_value (*(m->context), create_atom (UCL_TYPE_SYMBOL, "foxtrot"), create_atom (UCL_TYPE_STRING, "Letter F"));
 
-	//symbols_purge (context); /* —É–¥–∞–ª–∏–º –≤—Å–µ —Å–∏–º–≤–æ–ª—ã —Ç–µ–∫—É—â–µ–≥–æ –∫–æ–Ω—Ç–µ–∫—Å—Ç–∞... –∞ –º–æ–∂–Ω–æ –∏ –Ω–µ —É–¥–∞–ª—è—Ç—å - GC –æ –Ω–∏—Ö –ø–æ–∑–∞–±–æ—Ç–∏—Ç—Å—è */
+	symbol_intern (m->context, create_atom (UCL_TYPE_SYMBOL, "sierra"));
+	symbol_set_value (*(m->context), create_atom (UCL_TYPE_SYMBOL, "sierra"), create_atom (UCL_TYPE_STRING, "Letter S"));
 
-	m->environment = cons ( NIL, m->environment ); /* —Å–ø—É—Å—Ç–∏–º—Å—è –Ω–∞ –æ–¥–∏–Ω —É—Ä–æ–≤–µ–Ω—å –æ–∫—Ä—É–∂–µ–Ω–∏—è */
-	m->context = &CAR(m->environment);
+	//symbols_purge (context); /* Û‰‡ÎËÏ ‚ÒÂ ÒËÏ‚ÓÎ˚ ÚÂÍÛ˘Â„Ó ÍÓÌÚÂÍÒÚ‡... ‡ ÏÓÊÌÓ Ë ÌÂ Û‰‡ÎˇÚ¸ - GC Ó ÌËı ÔÓÁ‡·ÓÚËÚÒˇ */
+
+	//m->environment = cons ( NIL, m->environment ); /* ÒÔÛÒÚËÏÒˇ Ì‡ Ó‰ËÌ ÛÓ‚ÂÌ¸ ÓÍÛÊÂÌËˇ */
+	//m->context = &_CAR(m->environment);
 
 	symbol_intern (m->context, create_atom (UCL_TYPE_SYMBOL, "delta"));
 	symbol_set_value (*(m->context), create_atom (UCL_TYPE_SYMBOL, "delta"), create_atom (UCL_TYPE_STRING, "Letter D"));
+
+	m->environment = cons ( NIL, m->environment ); /* ÒÔÛÒÚËÏÒˇ Ì‡ Ó‰ËÌ ÛÓ‚ÂÌ¸ ÓÍÛÊÂÌËˇ */
+	m->context = &_CAR(m->environment);
+
+	symbol_intern (m->context, create_atom (UCL_TYPE_SYMBOL, "f"));
+	symbol_set_value (*(m->context), create_atom (UCL_TYPE_SYMBOL, "f"), create_atom (UCL_TYPE_LAMBDA, ""));
+
 	printf("environment one level down: "); debug_list (m->environment); printf ("\n");
 
-	//environment = CDR(environment); /* –ø–æ–¥–Ω–∏–º–µ–º—Å—è –æ–±—Ä–∞—Ç–Ω–æ */
+	//environment = CDR(environment); /* ÔÓ‰ÌËÏÂÏÒˇ Ó·‡ÚÌÓ */
 	//context = &CAR(environment);
 
 
@@ -97,37 +107,38 @@ int main(void)
 	exit(-1);
 #endif
 
-	operator_describe(get_operator(find_operator(create_atom (UCL_TYPE_SYMBOL, "if"))));
-	operator_describe(get_operator(find_operator(create_atom (UCL_TYPE_SYMBOL, "quote"))));
+	//operator_describe(get_operator(find_operator(create_atom (UCL_TYPE_SYMBOL, "if"))));
+	//operator_describe(get_operator(find_operator(create_atom (UCL_TYPE_SYMBOL, "quote"))));
 
 #if 1
+#if 0
 	arr = create_atom (UCL_TYPE_VECTOR, UCL_INT(10));
 	symbol_intern (m->context, create_atom (UCL_TYPE_SYMBOL, "zulu"));
 	symbol_set_value (*(m->context), create_atom (UCL_TYPE_SYMBOL, "zulu"), arr);
 	//memory_dump(10);
-#if 1
 	VECTOR_set_element (arr, create_atom (UCL_TYPE_UINT32, UCL_INT(0)), create_atom (UCL_TYPE_SYMBOL, "Romeo")); /* this will win */
 	VECTOR_set_element (arr, create_atom (UCL_TYPE_UINT32, UCL_INT(1)), create_atom (UCL_TYPE_STRING, "Yankee")); /* this will win */
 	VECTOR_set_element (arr, create_atom (UCL_TYPE_UINT32, UCL_INT(2)), create_atom (UCL_TYPE_INT32, UCL_INT(-2))); /* this will win */
 	VECTOR_set_element (arr, create_atom (UCL_TYPE_UINT32, UCL_INT(123)), create_atom (UCL_TYPE_SYMBOL, "yankee")); /* this will fail */
 	//VECTOR_set_element (arr, create_atom (UCL_TYPE_UINT32, UCL_INT(9)), create_atom (UCL_TYPE_SYMBOL, "juliette")); /* this will win */
 	VECTOR_set_element (symbol_get_value (m->environment, create_atom (UCL_TYPE_SYMBOL, "zulu")), create_atom (UCL_TYPE_UINT32, UCL_INT(9)), create_atom (UCL_TYPE_SYMBOL, "juliette")); /* this will win */
-	//print_this_atom(arr);
-	//destroy_atom(arr);
-	//symbol_set_value (context, create_atom (UCL_TYPE_SYMBOL, "zulu"), arr);
-#endif
 	printf ("Array length: ");
 	print_this(VECTOR_get_length (arr));
 	printf ("\n");
 	printf ("Array: ");
 	print_this (eval(create_atom (UCL_TYPE_SYMBOL, "zulu")));
 	printf ("\n");
+#endif
 	{
 		uclptr_t expr = NIL;
+		#if 0
 		expr = cons (create_atom (UCL_TYPE_STRING, "No"), expr);
 		expr = cons (create_atom (UCL_TYPE_STRING, "Yes"), expr);
 		expr = cons (create_atom (UCL_TYPE_BOOL, UCL_INT(0)), expr);
 		expr = cons (create_atom (UCL_TYPE_SYMBOL, "if"), expr);
+		#else
+		expr = cons (create_atom (UCL_TYPE_SYMBOL, "f"), expr);
+		#endif
 		printf ("eval ");
 		print_this (expr);
 		printf (": ");
@@ -139,7 +150,7 @@ int main(void)
 	printf("environment after: "); debug_list (m->environment); printf ("\n");
 	//symbols_purge();
 	//memory_dump(0);
-	//exit(-1);
+	exit(-1);
 #else
 	/*
 	s = create_atom (9, "X1");
@@ -227,7 +238,7 @@ int main(void)
 
 #endif
 
-	/* —Å–ª–µ–¥—É—é—â–∏–π –≤—ã–∑–æ–≤ –¥–æ–ª–∂–µ–Ω –∑–∞—Ñ–µ–π–ª–∏—Ç—å, —Ç.–∫. —É–∫–∞–∑—ã–≤–∞–µ–º—ã–π —Å–∏–º–≤–æ–ª –Ω–∞—Ö–æ–¥–∏—Ç—Å—è –≤–Ω–µ –ø—Ä–µ–¥–µ–ª–æ–≤ –¥–æ—Å—è–≥–∞–µ–º–æ—Å—Ç–∏ –¥–ª—è SET */
+	/* ÒÎÂ‰Û˛˘ËÈ ‚˚ÁÓ‚ ‰ÓÎÊÂÌ Á‡ÙÂÈÎËÚ¸, Ú.Í. ÛÍ‡Á˚‚‡ÂÏ˚È ÒËÏ‚ÓÎ Ì‡ıÓ‰ËÚÒˇ ‚ÌÂ ÔÂ‰ÂÎÓ‚ ‰ÓÒˇ„‡ÂÏÓÒÚË ‰Îˇ SET */
 	symbol_set_value (*(m->context), create_atom (UCL_TYPE_SYMBOL, "foxtrot"), create_atom (UCL_TYPE_STRING, "Replaced with this string"));
 	goto exit;
 exit:
@@ -251,58 +262,58 @@ exit:
 /* ----------------------------------------------------------- */
 /* ----------------------------------------------------------- */
 
-void symbol_forget (uclptr_t *symlist, uclptr_t symbol) /* –∑–∞–±—ã–≤–∞–µ–º —Å–∏–º–≤–æ–ª (—É–¥–∞–ª—è–µ–º –µ–≥–æ –∏–∑ —Å–ø–∏—Å–∫–∞) */
+void symbol_forget (uclptr_t *symlist, uclptr_t symbol) /* Á‡·˚‚‡ÂÏ ÒËÏ‚ÓÎ (Û‰‡ÎˇÂÏ Â„Ó ËÁ ÒÔËÒÍ‡) */
 {
 	uclptr_t i;
 
-	if (compare_atoms (symbol, CAR(CAR(*symlist)))) /* –µ—Å–ª–∏ —Å–∏–º–≤–æ–ª –≤–¥—Ä—É–≥ –Ω–∞—Ö–æ–¥–∏—Ç—Å—è –≤ –≥–æ–ª–æ–≤–µ —Å–ø–∏—Å–∫–∞ */
+	if (compare_atoms (symbol, _CAR(_CAR(*symlist)))) /* ÂÒÎË ÒËÏ‚ÓÎ ‚‰Û„ Ì‡ıÓ‰ËÚÒˇ ‚ „ÓÎÓ‚Â ÒÔËÒÍ‡ */
 	{
-		uintptr_t n = CDR(*symlist); /* –Ω—É–∂–µ–Ω —Å–ª–µ–¥—É—é—â–∏–π —ç–ª–µ–º–µ–Ω—Ç */
-		list_delete (CAR(*symlist)); /* —É–¥–∞–ª—è–µ–º —ç—Ç—É –∑–∞–ø–∏—Å—å */
-		*symlist = n; /* –∫–æ—Ä—Ä–µ–∫—Ç–∏—Ä—É–µ–º –≥–æ–ª–æ–≤—É —Å–ø–∏—Å–∫–∞ */
+		uintptr_t n = _CDR(*symlist); /* ÌÛÊÂÌ ÒÎÂ‰Û˛˘ËÈ ˝ÎÂÏÂÌÚ */
+		list_delete (_CAR(*symlist)); /* Û‰‡ÎˇÂÏ ˝ÚÛ Á‡ÔËÒ¸ */
+		*symlist = n; /* ÍÓÂÍÚËÛÂÏ „ÓÎÓ‚Û ÒÔËÒÍ‡ */
 	}
-	else for (i = *symlist; !IS_NIL(i); i = CDR(i))
+	else for (i = *symlist; !IS_NIL(i); i = _CDR(i))
 	{
-		if (!IS_NIL(CDR(i))) /* —Ö–≤–æ—Å—Ç –Ω–µ –ø—É—Å—Ç */
+		if (!IS_NIL(_CDR(i))) /* ı‚ÓÒÚ ÌÂ ÔÛÒÚ */
 		{
-			uclptr_t candidate = CAR(CAR(CDR(i))); /* –∫–∞–Ω–¥–∏–¥–∞—Ç - –≤–æ–∑–º–æ–∂–Ω–æ, —Å–ª–µ–¥—É—é—â–∞—è –∑–∞–ø–∏—Å—å? –±–µ—Ä—ë–º –µ—ë –Ω–∞—á–∞–ª–æ */
+			uclptr_t candidate = _CAR(_CAR(_CDR(i))); /* Í‡Ì‰Ë‰‡Ú - ‚ÓÁÏÓÊÌÓ, ÒÎÂ‰Û˛˘‡ˇ Á‡ÔËÒ¸? ·Â∏Ï Â∏ Ì‡˜‡ÎÓ */
 			printf ("candidate: "); print_this(candidate); printf ("\n");
-			if (compare_atoms (symbol, candidate)) /* —Å—Ä–∞–≤–Ω–∏–≤–∞–µ–º */
+			if (compare_atoms (symbol, candidate)) /* Ò‡‚ÌË‚‡ÂÏ */
 			{
-				/* –≤ —Å–ª—É—á–∞–µ —Å–æ–≤–ø–∞–¥–µ–Ω–∏—è: */
-				uclptr_t n = IS_NIL(CDR(i)) ? NIL : CDR(CDR(i)); /* –±–µ—Ä—ë–º –∏–Ω–¥–µ–∫—Å —Å–ª–µ–¥—É—é—â–µ–π –ø–æ—Å–ª–µ —Å–ª–µ–¥—É—é—â–µ–π –∑–∞–ø–∏—Å–∏ */
-				delete_this (CAR(CDR(i))); /* —É–¥–∞–ª—è–µ–º –Ω–∞–π–¥–µ–Ω–Ω—É—é –∑–∞–ø–∏—Å—å */
-				CDR(i) = n; /* –∫–æ—Ä—Ä–µ–∫—Ç–∏—Ä—É–µ–º –∏–Ω–¥–µ–∫—Å —Ç–µ–∫—É—â–µ–π –∑–∞–ø–∏—Å–∏ */
-				break; /* –ª–æ–º–∞–µ–º —Ü–∏–∫–ª */
+				/* ‚ ÒÎÛ˜‡Â ÒÓ‚Ô‡‰ÂÌËˇ: */
+				uclptr_t n = IS_NIL(_CDR(i)) ? NIL : _CDR(_CDR(i)); /* ·Â∏Ï ËÌ‰ÂÍÒ ÒÎÂ‰Û˛˘ÂÈ ÔÓÒÎÂ ÒÎÂ‰Û˛˘ÂÈ Á‡ÔËÒË */
+				delete_this (_CAR(_CDR(i))); /* Û‰‡ÎˇÂÏ Ì‡È‰ÂÌÌÛ˛ Á‡ÔËÒ¸ */
+				_CDR(i) = n; /* ÍÓÂÍÚËÛÂÏ ËÌ‰ÂÍÒ ÚÂÍÛ˘ÂÈ Á‡ÔËÒË */
+				break; /* ÎÓÏ‡ÂÏ ˆËÍÎ */
 			}
 		}
 	}
-	destroy_atom(symbol); /* –ø–µ—Ä–µ–¥–∞–Ω–Ω—ã–π –æ–±—Ä–∞–∑–µ—Ü —É–¥–∞–ª—è–µ—Ç—Å—è –∑–∞ –Ω–µ–Ω–∞–¥–æ–±–Ω–æ—Å—Ç—å—é */
+	destroy_atom(symbol); /* ÔÂÂ‰‡ÌÌ˚È Ó·‡ÁÂˆ Û‰‡ÎˇÂÚÒˇ Á‡ ÌÂÌ‡‰Ó·ÌÓÒÚ¸˛ */
 }
 
 uclptr_t symbol_lookup (uclptr_t symlist, uclptr_t symbol)
-/* –Ω–∞–∏–≤–Ω–æ –ø–æ–ª–∞–≥–∞–µ–º, —á—Ç–æ –Ω–∞–º —Å–∫–æ—Ä–º–∏–ª–∏ –ø—Ä–∞–≤–∏–ª—å–Ω—ã–µ –ø–∞—Ä–∞–º–µ—Ç—Ä—ã */
+/* Ì‡Ë‚ÌÓ ÔÓÎ‡„‡ÂÏ, ˜ÚÓ Ì‡Ï ÒÍÓÏËÎË Ô‡‚ËÎ¸Ì˚Â Ô‡‡ÏÂÚ˚ */
 {
 	uclptr_t symrec;
-	for (symrec = symlist; !IS_NIL(symrec); symrec = CDR(symrec))
+	for (symrec = symlist; !IS_NIL(symrec); symrec = _CDR(symrec))
 	{
-		uclptr_t candidate = CAR(CAR(symrec)); /* CAR(symrec) - –ø–µ—Ä–≤—ã–π —ç–ª–µ–º–µ–Ω—Ç —Å–ø–∏—Å–∫–∞ symrec, CAR(CAR)) —ç—Ç–æ –ø–µ—Ä–≤—ã–π —ç–ª–µ–º–µ–Ω—Ç –ø–µ—Ä–≤–æ–≥–æ —ç–ª–µ–º–µ–Ω—Ç–∞, –æ—á–µ–≤–∏–¥–Ω–æ */
+		uclptr_t candidate = _CAR(_CAR(symrec)); /* CAR(symrec) - ÔÂ‚˚È ˝ÎÂÏÂÌÚ ÒÔËÒÍ‡ symrec, CAR(CAR)) ˝ÚÓ ÔÂ‚˚È ˝ÎÂÏÂÌÚ ÔÂ‚Ó„Ó ˝ÎÂÏÂÌÚ‡, Ó˜Â‚Ë‰ÌÓ */
 		if (compare_atoms (symbol, candidate))
 		{
-			//destroy_atom(symbol); /* —Å–∏–º–≤–æ–ª –Ω–∞–π–¥–µ–Ω, –æ–±—Ä–∞–∑–µ—Ü –±–æ–ª—å—à–µ –Ω–µ –Ω—É–∂–µ–Ω -- –ù–ê–î–û –õ–ò? –ú–û–ñ–ù–û –õ–ò? –ê –µ—Å–ª–∏ —Å–∏–º–≤–æ–ª –≤–∑—è—Ç –æ—Ç–∫—É–¥–∞-—Ç–æ –µ—â—ë? */
-			return CAR(symrec);
+			//destroy_atom(symbol); /* ÒËÏ‚ÓÎ Ì‡È‰ÂÌ, Ó·‡ÁÂˆ ·ÓÎ¸¯Â ÌÂ ÌÛÊÂÌ -- Õ¿ƒŒ À»? ÃŒ∆ÕŒ À»? ¿ ÂÒÎË ÒËÏ‚ÓÎ ‚ÁˇÚ ÓÚÍÛ‰‡-ÚÓ Â˘∏? */
+			return _CAR(symrec);
 		}
 	}
 	return NIL;
 }
 
-uclptr_t symbol_lookup_scoped (uclptr_t scope, uclptr_t symbol) /* –∏—â–µ—Ç —Å–∏–º–≤–æ–ª –ø–æ –≤—Å–µ–º—É —É–∫–∞–∑–∞–Ω–Ω–æ–º—É —Å–ø–∏—Å–∫—É —Å–ø–∏—Å–∫–æ–≤ –ø–∞—Ä */
+uclptr_t symbol_lookup_scoped (uclptr_t scope, uclptr_t symbol) /* Ë˘ÂÚ ÒËÏ‚ÓÎ ÔÓ ‚ÒÂÏÛ ÛÍ‡Á‡ÌÌÓÏÛ ÒÔËÒÍÛ ÒÔËÒÍÓ‚ Ô‡ */
 {
 	uclptr_t i, symrec = NIL;
-	for (i = scope; !IS_NIL(i); i = CDR(i))
+	for (i = scope; !IS_NIL(i); i = _CDR(i))
 	{
-		symrec = symbol_lookup (CAR(i), symbol);
-		if (!IS_NIL(symrec)) return symrec; /* –±—É–¥–µ–º –∏—Å–∫–∞—Ç—å –¥–æ —Ç–µ—Ö –ø–æ—Ä, –ø–æ–∫–∞ –Ω–µ –Ω–∞–π–¥—ë–º */
+		symrec = symbol_lookup (_CAR(i), symbol);
+		if (!IS_NIL(symrec)) return symrec; /* ·Û‰ÂÏ ËÒÍ‡Ú¸ ‰Ó ÚÂı ÔÓ, ÔÓÍ‡ ÌÂ Ì‡È‰∏Ï */
 	}
 	return NIL;
 }
@@ -310,18 +321,18 @@ uclptr_t symbol_lookup_scoped (uclptr_t scope, uclptr_t symbol) /* –∏—â–µ—Ç —Å–∏
 uclptr_t symbol_intern (uclptr_t *symlist, uclptr_t symbol)
 {
 	uclptr_t i;
-	for (i = *symlist; !IS_NIL(i); i = CDR(i))
+	for (i = *symlist; !IS_NIL(i); i = _CDR(i))
 	{
-		uclptr_t candidate = CAR(CAR(i));
+		uclptr_t candidate = _CAR(_CAR(i));
 		if (compare_atoms (symbol, candidate))
 		{
-			destroy_atom(symbol); /* –ø–µ—Ä–µ–¥–∞–Ω–Ω—ã–π —Å–∏–º–≤–æ–ª —É–¥–∞–ª—è–µ—Ç—Å—è, —Ç.–∫. –µ–≥–æ –∫–æ–ø–∏—è —É–∂–µ –µ—Å—Ç—å –≤ —Å–ø–∏—Å–∫–µ */
-			return CAR(i);
+			destroy_atom(symbol); /* ÔÂÂ‰‡ÌÌ˚È ÒËÏ‚ÓÎ Û‰‡ÎˇÂÚÒˇ, Ú.Í. Â„Ó ÍÓÔËˇ ÛÊÂ ÂÒÚ¸ ‚ ÒÔËÒÍÂ */
+			return _CAR(i);
 		}
 	}
-	/* –µ—Å–ª–∏ —Å–∏–º–≤–æ–ª –Ω–µ –Ω–∞–π–¥–µ–Ω (–∏–ª–∏ —Å–ø–∏—Å–æ–∫ –ø—É—Å—Ç) */
+	/* ÂÒÎË ÒËÏ‚ÓÎ ÌÂ Ì‡È‰ÂÌ (ËÎË ÒÔËÒÓÍ ÔÛÒÚ) */
 	*symlist = cons	(cons (symbol, NIL), *symlist);
-	return CAR(*symlist);
+	return _CAR(*symlist);
 }
 
 uclptr_t symbol_get_value (uclptr_t scope, uclptr_t symbol)
@@ -351,12 +362,12 @@ uclptr_t symbol_get_this_value (uclptr_t symrec)
 		printf ("GET VALUE error: symbol is not found\n");
 		return NIL;
 	} else
-	if (IS_NIL(CDR(symrec)))
+	if (IS_NIL(_CDR(symrec)))
 	{
 		printf ("GET VALUE warning: symbol is not binded\n");
 		return NIL;
 	}
-	return CDR(symrec); /* –≤–æ–∑–≤—Ä–∞—â–∞–µ–º —Å–ø–∏—Å–æ–∫ —Å–≤–æ–π—Å—Ç–≤ (—Ç–æ—á–Ω–µ–µ, –µ–¥–∏–Ω—Å—Ç–≤–µ–Ω–Ω–æ–µ —Å–≤–æ–π—Å—Ç–≤–æ - –∑–Ω–∞—á–µ–Ω–∏–µ) */
+	return _CDR(symrec); /* ‚ÓÁ‚‡˘‡ÂÏ ÒÔËÒÓÍ Ò‚ÓÈÒÚ‚ (ÚÓ˜ÌÂÂ, Â‰ËÌÒÚ‚ÂÌÌÓÂ Ò‚ÓÈÒÚ‚Ó - ÁÌ‡˜ÂÌËÂ) */
 }
 
 uclptr_t symbol_set_this_value (uclptr_t symrec, uclptr_t value)
@@ -366,13 +377,13 @@ uclptr_t symbol_set_this_value (uclptr_t symrec, uclptr_t value)
 		printf ("SET VALUE error: symbol is not found\n");
 		return NIL;
 	};
-	if (!IS_NIL(CDR(symrec)))
+	if (!IS_NIL(_CDR(symrec)))
 	{
 		//printf ("SET VALUE warning: symbol is binded, deleting previous value...\n");
-		delete_this(CDR(symrec));
+		delete_this(_CDR(symrec));
 	}
-	CDR(symrec) = value;
-	return symrec; /* –≤–æ–∑–≤—Ä–∞—â–∞–µ–º –≤—Å—é –∑–∞–ø–∏—Å—å –æ —Å–∏–º–≤–æ–ª–µ */
+	_CDR(symrec) = value;
+	return symrec; /* ‚ÓÁ‚‡˘‡ÂÏ ‚Ò˛ Á‡ÔËÒ¸ Ó ÒËÏ‚ÓÎÂ */
 }
 
 
@@ -397,10 +408,10 @@ static uclptr_t ucl_operator_version (uclptr_t params)
 
 static uclptr_t ucl_operator_if (uclptr_t params)
 {
-	uclptr_t cond = CARNIL(params);
-	uclptr_t alternatives = CDRNIL(params);
-	uclptr_t if_true = CARNIL(alternatives);
-	uclptr_t if_false = CARNIL(CDRNIL(alternatives));
+	uclptr_t cond = CAR(params);
+	uclptr_t alternatives = CDR(params);
+	uclptr_t if_true = CAR(alternatives);
+	uclptr_t if_false = CAR(CDR(alternatives));
 
 	uint32_t cond_result = (uintptr_t)atom_data_of(eval(cond));
 	if (cond_result) { return eval(if_true); }
@@ -468,27 +479,32 @@ void operator_describe (const ucl_operator_t *f)
 
 uclptr_t eval (uclptr_t entity)
 {
-	switch (TAG(entity))
+	if (IS_NIL(entity)) { return NIL; }
+	else switch (TAG(entity))
 	{
 		case TAG_ATOM:
 		{
 			uclptr_t typeid = CAR(entity);
-			switch (typeid)
+			if (!IS_NIL(typeid)) switch (typeid)
 			{
 				case UCL_TYPE_SYMBOL:
-				/* –¥–ª—è —Å–∏–º–≤–æ–ª–æ–≤ - –≤–æ–∑–≤—Ä–∞—â–∞–µ–º –∏—Ö –∑–Ω–∞—á–µ–Ω–∏–µ */
+				/* ‰Îˇ ÒËÏ‚ÓÎÓ‚ - ‚ÓÁ‚‡˘‡ÂÏ Ëı ÁÌ‡˜ÂÌËÂ */
 				{
 					return symbol_get_value (m->environment, entity);
 				};
 				break;
 
 				default:
-				/* –≤—Å–µ –ø—Ä–æ—á–∏–µ –∞—Ç–æ–º—ã - —Å–∞–º–æ–≤—ã—á–∏—Å–ª–∏–º—ã–µ */
+				/* ‚ÒÂ ÔÓ˜ËÂ ‡ÚÓÏ˚ - Ò‡ÏÓ‚˚˜ËÒÎËÏ˚Â */
 				{
 					return entity;
 				};
 				break;
 			}
+			else
+			{
+				return NIL;
+			};
 		};
 		break;
 
@@ -500,7 +516,7 @@ uclptr_t eval (uclptr_t entity)
 			if ( (!IS_NIL(funcname)) && (CAR(funcname) == UCL_TYPE_SYMBOL) )
 			{
 				const ucl_operator_t *f;
-				/* —Å–ø–∏—Å–æ–∫ –∞—Ä–≥—É–º–µ–Ω—Ç–æ–≤ –æ–ø–µ—Ä–∞—Ç–æ—Ä—É –ø–µ—Ä–µ–¥–∞—ë—Ç—Å—è "–∫–∞–∫ –µ—Å—Ç—å" */
+				/* ÒÔËÒÓÍ ‡„ÛÏÂÌÚÓ‚ ÓÔÂ‡ÚÓÛ ÔÂÂ‰‡∏ÚÒˇ "Í‡Í ÂÒÚ¸" */
 				if ((f = get_operator (find_operator(funcname))) != 0)
 				{
 					return f->code(argslist);
@@ -510,16 +526,16 @@ uclptr_t eval (uclptr_t entity)
 					uclptr_t lambda = symbol_get_value(m->environment, funcname);
 					if (!IS_NIL(lambda) && (CAR(lambda) == UCL_TYPE_LAMBDA) )
 					{
-						uclptr_t proto = (uclptr_t)(uintptr_t)atom_data_of(lambda); /* –≤–æ–∑–≤—Ä–∞—â–∞–µ—Ç –ø–∞—Ä—É (args body), –≥–¥–µ
-							args —ç—Ç–æ —Å–ø–∏—Å–æ–∫ –∞—Ä–≥—É–º–µ–Ω—Ç–æ–≤ (–º–æ–∂–µ—Ç –±—ã—Ç—å –ø—É—Å—Ç—ã–º),
-							body —Å–ø–∏—Å–æ–∫ –∏–Ω—Å—Ç—Ä—É–∫—Ü–∏–π (–ø—É—Å—Ç—ã–º –±—ã—Ç—å –Ω–µ –¥–æ–ª–∂–µ–Ω, –Ω–æ —Ç–æ–∂–µ –º–æ–∂–µ—Ç) */
-						if (!IS_NIL(proto))
-						{
-							uclptr_t args = CAR(proto);
-							uclptr_t body = CDR(proto);
-							printf ("Lambda args: "); print_this(args); printf ("\n");
-							printf ("Lambda body: "); print_this(body); printf ("\n");
-						}
+						uclptr_t proto = CDR(lambda);
+						uclptr_t ctx = CAR(proto);
+						uclptr_t args = CADR(proto);
+						uclptr_t code = CADDR(proto);
+						printf ("\n");
+						printf ("Lambda ctx: "); print_this(ctx); printf ("\n");
+						printf ("Lambda args: "); print_this(args); printf ("\n");
+						printf ("Lambda code: "); print_this(code); printf ("\n");
+
+						return eval(code);
 					}
 				}
 			}
